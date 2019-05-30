@@ -5,11 +5,12 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.AttributeSet;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-public class GameView extends SurfaceView implements Runnable {
+public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Callback {
 
     static int sWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     static int sHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
@@ -25,6 +26,12 @@ public class GameView extends SurfaceView implements Runnable {
     public GameView(Context context){
         super(context);
         holder = getHolder();
+        paint.setColor(Color.RED);
+    }
+
+    public GameView(Context context, AttributeSet attributeSet){
+        super(context,attributeSet);
+        getHolder().addCallback(this);
         paint.setColor(Color.RED);
     }
 
@@ -52,13 +59,23 @@ public class GameView extends SurfaceView implements Runnable {
         this.y = y;
     }
 
+    public void surfaceCreated(SurfaceHolder holder){
+        Canvas c = getHolder().lockCanvas();
+        draw(c);
+        getHolder().unlockCanvasAndPost(c);
+    }
+    public void surfaceDestroyed(SurfaceHolder holder){
+
+    }
+    public void surfaceChanged(SurfaceHolder holder, int x, int y, int z){}
+
     public void run(){
         while (running){
             if(!holder.getSurface().isValid()){
                 continue;
             }
             Canvas c = holder.lockCanvas();
-            c.drawARGB(255,150,150,10);
+            //c.drawARGB(0,150,150,10);
             //c.drawBitmap(bMap,x,y,null);
             c.drawRect(x - 50, y - 50, x+50, y+50,paint);
             squareBounder();

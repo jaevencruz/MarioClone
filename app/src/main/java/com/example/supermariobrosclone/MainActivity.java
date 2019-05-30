@@ -31,9 +31,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         ball = BitmapFactory.decodeFile(fname);
         x = y = 0;
-        v = new GameView(this, ball, x,y);
+        v = new GameView(this);
         v.setOnTouchListener(this);
-        setContentView(v);
+        setContentView(R.layout.activity_main);
 
 
     }
