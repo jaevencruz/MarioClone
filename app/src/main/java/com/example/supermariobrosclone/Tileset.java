@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+
 public class Tileset extends View {
 
     Bitmap bMap;
@@ -64,4 +65,6 @@ public class Tileset extends View {
             canvas.drawBitmap(tSet[i], i*(50) + 1,canvas.getHeight()/2,null);
         }
     }
+
+
 }
