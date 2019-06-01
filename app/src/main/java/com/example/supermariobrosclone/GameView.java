@@ -2,6 +2,7 @@ package com.example.supermariobrosclone;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -151,5 +152,31 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 y--;
             }
         }
+    }
+    public void bmap(){
+        int color, red, green, blue, blockside;
+        Bitmap b = BitmapFactory.decodeFile("drawable/pixelmap1.png");
+        blockside = sWidth/12;
+        for(int i = 0; i < 12; i++){
+            for(int j = 0; j < 12; j++){
+                color = b.getPixel(i,j);
+                red = Color.red(color);
+                blue = Color.blue(color);
+                green = Color.green(color);
+                block(red,blue,green,i,j);
+            }
+        }
+
+    }
+    public void block(int r, int b, int g, int x, int y){
+        int blockside = sWidth/12;
+        Bitmap blk = null;
+        if(r == 0 && g ==0 && b==0)
+        {
+            blk = BitmapFactory.decodeFile("drawable/groundblock.png");
+            Bitmap.createScaledBitmap(blk, blockside, blockside, false);
+        }
+
+
     }
 }
