@@ -153,7 +153,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     }
     public void bmap(Canvas canvas){
         int color, red, green, blue, blockside;
-
+        blockside = sHeight/12;
         Bitmap blk;
         Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.pixelmap1);
         for(int i = 0; i < 12; i++){
@@ -163,26 +163,26 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 blue = Color.blue(color);
                 green = Color.green(color);
                 blk = block(red,blue,green,i,j);
-                canvas.drawBitmap(blk, i*12, j * 12,null);
+                canvas.drawBitmap(blk, i*blockside, j * blockside,null);
                 System.out.println("Printed a box \n");
             }
         }
 
     }
     public Bitmap block(int r, int b, int g, int x, int y){
-        int blockside = sWidth/12;
+        int blockside = sHeight/12;
         Bitmap blk = null;
         if(r == 0 && g ==0 && b==0)
         {
             //spawn a ground block if pixel is black
             System.out.println("Groundblock printed");
             blk = BitmapFactory.decodeResource(getResources(), R.drawable.groundblock);
-            Bitmap.createScaledBitmap(blk, blockside, blockside, false);
+            blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
         }
         else if (r==255 && g == 0 && b ==0){
             //spawn a breakable brick if pixel is red
             blk = BitmapFactory.decodeResource(getResources(), R.drawable.brickblock1);
-            Bitmap.createScaledBitmap(blk, blockside, blockside, false);
+            blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
         }
         else if(r == 0 && g == 0 && b==255){
             //spawn mario here if pixel is blue
