@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         this.v.setY(me.getY());
         this.v.mario.setPosition(me.getX(),me.getY());
         System.out.println("Nani?!");
+
         return false;
     }
 

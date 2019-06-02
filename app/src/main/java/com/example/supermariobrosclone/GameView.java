@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.Display;
 import android.view.SurfaceHolder;
@@ -17,23 +18,24 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     static int sHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
     Thread t = null;
-    SurfaceHolder holder;
     boolean running = false;
-    Bitmap bMap;
+    Bitmap bMap = decodeSampledBitmapFromResource(getResources(),R.drawable.hsuhao, 100,100);
     float x,y,bMapWidth,bMapHeight;
     Paint paint = new Paint();
     int numHolder = 0;
     RectPlayer mario = new RectPlayer();
 
+
+
     public GameView(Context context){
         super(context);
-        holder = getHolder();
+        getHolder().addCallback(this);
         paint.setColor(Color.RED);
     }
 
     public GameView(Context context, AttributeSet attributeSet){
         super(context,attributeSet);
-        holder = getHolder();
+        getHolder().addCallback(this);
         paint.setColor(Color.RED);
     }
 
@@ -46,30 +48,34 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         this.y = y;
     }
 
+    @Override
     public void surfaceCreated(SurfaceHolder holder){
         System.out.println("sWidth is : "+sWidth+" and sHeight is : "+sHeight);
-        this.holder = holder;
         mario.setPosition(sWidth/2,sHeight/2);
         running = true;
     }
+
+    @Override
     public void surfaceDestroyed(SurfaceHolder holder){
-        this.holder = holder;
     }
+    @Override
     public void surfaceChanged(SurfaceHolder holder, int x, int y, int z){
-        this.holder = holder;
     }
 
     public void run(){
         while (running){
-            synchronized (holder){
-                if(!holder.getSurface().isValid()){
+            synchronized (getHolder()){
+                if(!getHolder().getSurface().isValid()){
                     continue;
                 }
-                Canvas c = holder.lockCanvas();
+                Rect r = new Rect(100,100,400,400);
+                Canvas c = getHolder().lockCanvas();
                 //c.drawRect(x - 50, y - 50, x+50, y+50,paint);
                 //squareBounder();
+
                 mario.draw(c);
-                c.drawRect(100, 100, 200, 200, paint);
+                c.drawRect(r, paint);
+                c.drawBitmap(bMap,r,r,paint);
                 /*int color, red, green, blue, blockside;
                 try {
                     Bitmap b = BitmapFactory.decodeFile("drawable/pixelmap1.png");
@@ -90,8 +96,8 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                         System.out.println("Printed a box \n");
                     }
                 }*/
-                
-                holder.unlockCanvasAndPost(c);
+                invalidate();
+                getHolder().unlockCanvasAndPost(c);
             }
         }
     }
@@ -196,5 +202,44 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
             //spawn mario here if pixel is blue
         }
         return blk;
+    }
+
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
+    }
+
+    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
+                                                         int reqWidth, int reqHeight) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(res, resId, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeResource(res, resId, options);
     }
 }
