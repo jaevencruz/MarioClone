@@ -76,23 +76,11 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 continue;
             }
             Canvas c = holder.lockCanvas();
-            int color, red, green, blue, blockside;
-            Bitmap b = BitmapFactory.decodeFile("drawable/pixelmap1.png");
-            Bitmap blk;
             //c.drawARGB(0,150,150,10);
             //c.drawBitmap(bMap,x,y,null);
             c.drawRect(x - 50, y - 50, x+50, y+50,paint);
-            for(int i = 0; i < 12; i++){
-                for(int j = 0; j < 12; j++){
-                    color = b.getPixel(i,j);
-                    red = Color.red(color);
-                    blue = Color.blue(color);
-                    green = Color.green(color);
-                    blk = block(red,blue,green,i,j);
-                    c.drawBitmap(blk, i*12, j * 12,null);
-                    System.out.println("Printed a box \n");
-                }
-            }
+            //draws map here?
+            bmap(c);
 
             squareBounder();
             squareMover();
@@ -168,16 +156,20 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
             }
         }
     }
-    public void bmap(){
+    public void bmap(Canvas canvas){
         int color, red, green, blue, blockside;
-        Bitmap b = BitmapFactory.decodeFile("drawable/pixelmap1.png");
+
+        Bitmap blk;
+        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.pixelmap1);
         for(int i = 0; i < 12; i++){
             for(int j = 0; j < 12; j++){
                 color = b.getPixel(i,j);
                 red = Color.red(color);
                 blue = Color.blue(color);
                 green = Color.green(color);
-                block(red,blue,green,i,j);
+                blk = block(red,blue,green,i,j);
+                canvas.drawBitmap(blk, i*12, j * 12,null);
+                System.out.println("Printed a box \n");
             }
         }
 
@@ -188,12 +180,13 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         if(r == 0 && g ==0 && b==0)
         {
             //spawn a ground block if pixel is black
-            blk = BitmapFactory.decodeFile("drawable/groundblock.png");
+            System.out.println("Groundblock printed");
+            blk = BitmapFactory.decodeResource(getResources(), R.drawable.groundblock);
             Bitmap.createScaledBitmap(blk, blockside, blockside, false);
         }
         else if (r==255 && g == 0 && b ==0){
             //spawn a breakable brick if pixel is red
-            blk = BitmapFactory.decodeFile("drawable/brickblock1.png");
+            blk = BitmapFactory.decodeResource(getResources(), R.drawable.brickblock1);
             Bitmap.createScaledBitmap(blk, blockside, blockside, false);
         }
         else if(r == 0 && g == 0 && b==255){
