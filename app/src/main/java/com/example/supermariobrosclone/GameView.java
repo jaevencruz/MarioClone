@@ -20,7 +20,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     Thread t = null;
     boolean running = false;
     Bitmap bMap = decodeSampledBitmapFromResource(getResources(),R.drawable.hsuhao, 100,100);
-    float x,y;
+    float x,y,bMapWidth,bMapHeight;
     Paint paint = new Paint();
     int numHolder = 0;
     RectPlayer mario = new RectPlayer();
@@ -168,16 +168,20 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
             }
         }
     }
-    public void bmap(){
+    public void bmap(Canvas canvas){
         int color, red, green, blue, blockside;
-        Bitmap b = BitmapFactory.decodeFile("drawable/pixelmap1.png");
+
+        Bitmap blk;
+        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.pixelmap1);
         for(int i = 0; i < 12; i++){
             for(int j = 0; j < 12; j++){
                 color = b.getPixel(i,j);
                 red = Color.red(color);
                 blue = Color.blue(color);
                 green = Color.green(color);
-                block(red,blue,green,i,j);
+                blk = block(red,blue,green,i,j);
+                canvas.drawBitmap(blk, i*12, j * 12,null);
+                System.out.println("Printed a box \n");
             }
         }
 
@@ -188,12 +192,13 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         if(r == 0 && g ==0 && b==0)
         {
             //spawn a ground block if pixel is black
-            blk = BitmapFactory.decodeResource(getResources(),R.drawable.groundblock);
+            System.out.println("Groundblock printed");
+            blk = BitmapFactory.decodeResource(getResources(), R.drawable.groundblock);
             Bitmap.createScaledBitmap(blk, blockside, blockside, false);
         }
         else if (r==255 && g == 0 && b ==0){
             //spawn a breakable brick if pixel is red
-            blk = BitmapFactory.decodeResource(getResources(),R.drawable.brickblock1);
+            blk = BitmapFactory.decodeResource(getResources(), R.drawable.brickblock1);
             Bitmap.createScaledBitmap(blk, blockside, blockside, false);
         }
         else if(r == 0 && g == 0 && b==255){
