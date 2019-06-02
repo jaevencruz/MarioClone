@@ -26,11 +26,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
-        x = y = 0;
         v = new GameView(this.getBaseContext());
         v = findViewById(R.id.gameView);
         v.setOnTouchListener(this);
-        v.run();
         //v.setZOrderOnTop(true);
         //transparentV = v.getHolder();
         //transparentV.setFormat(PixelFormat.TRANSPARENT);

@@ -24,6 +24,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     Paint paint = new Paint();
     int numHolder = 0;
     RectPlayer mario = new RectPlayer();
+    Rect mBlock = mario.returnRect();
 
 
 
@@ -73,10 +74,10 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 //c.drawRect(x - 50, y - 50, x+50, y+50,paint);
                 //squareBounder();
 
-                mario.draw(c);
+                c.drawRect(mBlock,paint);
                 c.drawRect(r, paint);
                 c.drawBitmap(bMap,r,r,paint);
-                int color, red, green, blue, blockside;
+                /*int color, red, green, blue, blockside;
                 Bitmap b = decodeSampledBitmapFromResource(getResources(),R.drawable.brickblock1,50,50);
                 Bitmap blk = BitmapFactory.decodeResource(getResources(),R.drawable.brickblock1);
                 //c.drawARGB(0,150,150,10);
@@ -92,7 +93,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                         c.drawBitmap(b, i*12, j * 12,null);
 
                     }
-                }
+                }*/
                 invalidate();
                 getHolder().unlockCanvasAndPost(c);
             }

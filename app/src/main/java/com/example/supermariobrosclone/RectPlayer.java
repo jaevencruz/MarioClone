@@ -17,10 +17,11 @@ public class RectPlayer implements GameObject {
     }
 
     public void draw(Canvas canvas){
-        if(playerRect == null){
-            System.out.println("Help");
-        }
         canvas.drawRect(playerRect,paint);
+    }
+
+    public Rect returnRect(){
+        return this.playerRect;
     }
 
     public int returnX(){
