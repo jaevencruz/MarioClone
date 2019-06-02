@@ -2,9 +2,11 @@ package com.example.supermariobrosclone;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PixelFormat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -13,9 +15,8 @@ import java.io.File;
 
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
 
-    String fname;
+    SurfaceHolder transparentV;
     GameView v;
-    Bitmap ball;
     float x,y;
 
     @Override
@@ -23,17 +24,17 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        try{
-            fname = new File(getFilesDir(),"drawable/ballosteel.png").getAbsolutePath();
-        }catch(Exception e){
-            ball = BitmapFactory.decodeFile("C:\\Users\\jaeve\\AndroidStudioProjects\\SuperMarioBrosClone\\app\\src\\main\\res\\drawable\\ballosteel.png");
-        }
-
-        ball = BitmapFactory.decodeFile(fname);
-        x = y = 0;
-        v = new GameView(this);
-        v.setOnTouchListener(this);
         setContentView(R.layout.activity_main);
+
+        x = y = 0;
+        v = new GameView(this.getBaseContext());
+        v = findViewById(R.id.gameView);
+        v.setOnTouchListener(this);
+        v.run();
+        //v.setZOrderOnTop(true);
+        //transparentV = v.getHolder();
+        //transparentV.setFormat(PixelFormat.TRANSPARENT);
+
 
 
     }
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     public boolean onTouch(View v, MotionEvent me){
         this.v.setX(me.getX());
         this.v.setY(me.getY());
+        this.v.mario.setPosition(me.getX(),me.getY());
         System.out.println("Nani?!");
         return false;
     }

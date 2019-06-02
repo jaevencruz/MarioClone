@@ -23,6 +23,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     float x,y,bMapWidth,bMapHeight;
     Paint paint = new Paint();
     int numHolder = 0;
+    RectPlayer mario = new RectPlayer();
 
     public GameView(Context context){
         super(context);
@@ -32,25 +33,10 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
     public GameView(Context context, AttributeSet attributeSet){
         super(context,attributeSet);
-        getHolder().addCallback(this);
+        holder = getHolder();
         paint.setColor(Color.RED);
     }
 
-    public GameView(Context context, Bitmap b, float x, float y){
-        super(context);
-        this.bMap = b;
-        this.x = x;
-        this.y = y;
-        if(bMap == null){
-            bMapHeight = bMapWidth = 0;
-        }
-        else{
-            bMapWidth = (bMap.getWidth()/2);
-            bMapHeight = (bMap.getHeight()/2);
-        }
-        paint.setColor(Color.RED);
-        holder = getHolder();
-    }
 
     public void setX(float x){
         this.x = x;
@@ -61,27 +47,31 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     }
 
     public void surfaceCreated(SurfaceHolder holder){
-        Canvas c = getHolder().lockCanvas();
-        draw(c);
-        getHolder().unlockCanvasAndPost(c);
+        System.out.println("sWidth is : "+sWidth+" and sHeight is : "+sHeight);
+        this.holder = holder;
+        mario.setPosition(sWidth/2,sHeight/2);
+        running = true;
     }
     public void surfaceDestroyed(SurfaceHolder holder){
-
+        this.holder = holder;
     }
-    public void surfaceChanged(SurfaceHolder holder, int x, int y, int z){}
+    public void surfaceChanged(SurfaceHolder holder, int x, int y, int z){
+        this.holder = holder;
+    }
 
     public void run(){
         while (running){
-            if(!holder.getSurface().isValid()){
-                continue;
+            synchronized (holder){
+                if(!holder.getSurface().isValid()){
+                    continue;
+                }
+                Canvas c = holder.lockCanvas();
+                //c.drawRect(x - 50, y - 50, x+50, y+50,paint);
+                //squareBounder();
+                mario.draw(c);
+                c.drawRect(100, 100, 200, 200, paint);
+                holder.unlockCanvasAndPost(c);
             }
-            Canvas c = holder.lockCanvas();
-            //c.drawARGB(0,150,150,10);
-            //c.drawBitmap(bMap,x,y,null);
-            c.drawRect(x - 50, y - 50, x+50, y+50,paint);
-            squareBounder();
-            squareMover();
-            holder.unlockCanvasAndPost(c);
         }
     }
 
