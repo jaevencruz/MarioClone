@@ -20,7 +20,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     Thread t = null;
     boolean running = false;
     Bitmap bMap = decodeSampledBitmapFromResource(getResources(),R.drawable.hsuhao, 100,100);
-    float x,y,bMapWidth,bMapHeight;
+    float x,y;
     Paint paint = new Paint();
     int numHolder = 0;
     RectPlayer mario = new RectPlayer();
@@ -76,26 +76,23 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 mario.draw(c);
                 c.drawRect(r, paint);
                 c.drawBitmap(bMap,r,r,paint);
-                /*int color, red, green, blue, blockside;
-                try {
-                    Bitmap b = BitmapFactory.decodeFile("drawable/pixelmap1.png");
-                }catch(OutOfMemoryError e){System.out.println("Not valid");}
-                Bitmap blk;
-                color = Color.RED;
+                int color, red, green, blue, blockside;
+                Bitmap b = decodeSampledBitmapFromResource(getResources(),R.drawable.brickblock1,50,50);
+                Bitmap blk = BitmapFactory.decodeResource(getResources(),R.drawable.brickblock1);
                 //c.drawARGB(0,150,150,10);
                 //c.drawBitmap(bMap,x,y,null);
                 c.drawRect(x - 50, y - 50, x+50, y+50,paint);
                 for(int i = 0; i < 12; i++){
                     for(int j = 0; j < 12; j++){
-                        //color = b.getPixel(i,j);
+                        color = b.getPixel(i,j);
                         red = Color.red(color);
                         blue = Color.blue(color);
                         green = Color.green(color);
                         blk = block(red,blue,green,i,j);
-                        c.drawBitmap(blk, i*12, j * 12,null);
-                        System.out.println("Printed a box \n");
+                        c.drawBitmap(b, i*12, j * 12,null);
+
                     }
-                }*/
+                }
                 invalidate();
                 getHolder().unlockCanvasAndPost(c);
             }
@@ -190,12 +187,12 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         if(r == 0 && g ==0 && b==0)
         {
             //spawn a ground block if pixel is black
-            blk = BitmapFactory.decodeFile("drawable/groundblock.png");
+            blk = BitmapFactory.decodeResource(getResources(),R.drawable.groundblock);
             Bitmap.createScaledBitmap(blk, blockside, blockside, false);
         }
         else if (r==255 && g == 0 && b ==0){
             //spawn a breakable brick if pixel is red
-            blk = BitmapFactory.decodeFile("drawable/brickblock1.png");
+            blk = BitmapFactory.decodeResource(getResources(),R.drawable.brickblock1);
             Bitmap.createScaledBitmap(blk, blockside, blockside, false);
         }
         else if(r == 0 && g == 0 && b==255){
