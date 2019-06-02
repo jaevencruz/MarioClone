@@ -70,33 +70,29 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 //squareBounder();
                 mario.draw(c);
                 c.drawRect(100, 100, 200, 200, paint);
+                /*int color, red, green, blue, blockside;
+                try {
+                    Bitmap b = BitmapFactory.decodeFile("drawable/pixelmap1.png");
+                }catch(OutOfMemoryError e){System.out.println("Not valid");}
+                Bitmap blk;
+                color = Color.RED;
+                //c.drawARGB(0,150,150,10);
+                //c.drawBitmap(bMap,x,y,null);
+                c.drawRect(x - 50, y - 50, x+50, y+50,paint);
+                for(int i = 0; i < 12; i++){
+                    for(int j = 0; j < 12; j++){
+                        //color = b.getPixel(i,j);
+                        red = Color.red(color);
+                        blue = Color.blue(color);
+                        green = Color.green(color);
+                        blk = block(red,blue,green,i,j);
+                        c.drawBitmap(blk, i*12, j * 12,null);
+                        System.out.println("Printed a box \n");
+                    }
+                }*/
+                
                 holder.unlockCanvasAndPost(c);
             }
-            if(!holder.getSurface().isValid()){
-                continue;
-            }
-            Canvas c = holder.lockCanvas();
-            int color, red, green, blue, blockside;
-            Bitmap b = BitmapFactory.decodeFile("drawable/pixelmap1.png");
-            Bitmap blk;
-            //c.drawARGB(0,150,150,10);
-            //c.drawBitmap(bMap,x,y,null);
-            c.drawRect(x - 50, y - 50, x+50, y+50,paint);
-            for(int i = 0; i < 12; i++){
-                for(int j = 0; j < 12; j++){
-                    color = b.getPixel(i,j);
-                    red = Color.red(color);
-                    blue = Color.blue(color);
-                    green = Color.green(color);
-                    blk = block(red,blue,green,i,j);
-                    c.drawBitmap(blk, i*12, j * 12,null);
-                    System.out.println("Printed a box \n");
-                }
-            }
-
-            squareBounder();
-            squareMover();
-            holder.unlockCanvasAndPost(c);
         }
     }
 
