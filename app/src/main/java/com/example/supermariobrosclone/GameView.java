@@ -154,9 +154,9 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     }
     public void bmap(Canvas canvas){
         int color, red, green, blue, blockside;
-        blockside = sHeight/12;
+        blockside = sHeight/10;
         Bitmap blk;
-        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.pixelmap1);
+        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.pixelmap2);
         for(int i = 0; i < 12; i++){
             for(int j = 0; j < 12; j++){
                 color = b.getPixel(i,j);
@@ -171,8 +171,10 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
     }
     public Bitmap block(int r, int b, int g, int x, int y){
-        int blockside = sHeight/12;
+        int blockside = sHeight/10;
         Bitmap blk = null;
+        blk = BitmapFactory.decodeResource(getResources(), R.drawable.brickblock1);
+        blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
         if(r == 0 && g ==0 && b==0)
         {
             //spawn a ground block if pixel is black
@@ -187,6 +189,10 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         }
         else if(r == 0 && g == 0 && b==255){
             //spawn mario here if pixel is blue
+        }
+        else if(r ==255 && g==255 && b==255){
+            blk = BitmapFactory.decodeResource(getResources(), R.drawable.brickblock1);
+            blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
         }
         return blk;
     }
