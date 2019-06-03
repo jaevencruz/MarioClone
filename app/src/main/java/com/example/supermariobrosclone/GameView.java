@@ -9,7 +9,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -181,10 +180,10 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     }
     public void bmap(Canvas canvas){
         int color, red, green, blue, blockside;
-        blockside = sHeight/12;
+        blockside = sHeight/16;
         Bitmap blk;
-        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.pixelmap1);
-        for(int i = 0; i < 12; i++){
+        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.pixelmap3);
+        for(int i = 0; i < 24; i++){
             for(int j = 0; j < 12; j++){
                 color = b.getPixel(i,j);
                 red = Color.red(color);
@@ -198,12 +197,14 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
     }
     public Bitmap block(int r, int b, int g, int x, int y){
-        int blockside = sHeight/12;
+        int blockside = sHeight/16;
         Bitmap blk = null;
+        blk = BitmapFactory.decodeResource(getResources(), R.drawable.skyblu);
+        blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
         if(r == 0 && g ==0 && b==0)
         {
             //spawn a ground block if pixel is black
-            System.out.println("Groundblock printed");
+            System.out.println("Groundblock printed at" + x + "and" + y);
             blk = BitmapFactory.decodeResource(getResources(), R.drawable.groundblock);
             blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
         }
@@ -214,6 +215,10 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         }
         else if(r == 0 && g == 0 && b==255){
             //spawn mario here if pixel is blue
+        }
+        else if(r ==255 && g==255 && b==255){
+            blk = BitmapFactory.decodeResource(getResources(), R.drawable.skyblu);
+            blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
         }
         return blk;
     }
