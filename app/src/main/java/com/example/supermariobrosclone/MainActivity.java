@@ -2,6 +2,7 @@ package com.example.supermariobrosclone;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -53,8 +54,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         this.v.setX(me.getX());
         this.v.setY(me.getY());
         this.v.mario.setPosition(me.getX(),me.getY());
+        v.invalidate();
         System.out.println("Nani?!");
-
         return false;
     }
 

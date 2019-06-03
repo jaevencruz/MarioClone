@@ -16,6 +16,7 @@ public class RectPlayer implements GameObject {
         this.paint.setColor(Color.BLUE);
     }
 
+    @Override
     public void draw(Canvas canvas){
         canvas.drawRect(playerRect,paint);
     }

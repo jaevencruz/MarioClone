@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.Display;
 import android.view.SurfaceHolder;
@@ -17,14 +18,13 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     static int sWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     static int sHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
-    Thread t = null;
+    Thread t;
     boolean running = false;
     Bitmap bMap = decodeSampledBitmapFromResource(getResources(),R.drawable.hsuhao, 100,100);
     float x,y,bMapWidth,bMapHeight;
     Paint paint = new Paint();
     int numHolder = 0;
     RectPlayer mario = new RectPlayer();
-    Rect mBlock = mario.returnRect();
 
 
 
@@ -53,15 +53,42 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     public void surfaceCreated(SurfaceHolder holder){
         System.out.println("sWidth is : "+sWidth+" and sHeight is : "+sHeight);
         mario.setPosition(sWidth/2,sHeight/2);
+
         running = true;
+        Rect r = new Rect(100,100,400,400);
+        Canvas c = getHolder().lockCanvas();
+        //c.drawRect(x - 50, y - 50, x+50, y+50,paint);
+        //squareBounder();
+        mario.draw(c);
+        c.drawRect(r, paint);
+        c.drawBitmap(bMap,r,r,paint);
+        //bmap(c);
+        getHolder().unlockCanvasAndPost(c);
+        postInvalidate();
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder){
+
     }
+
     @Override
     public void surfaceChanged(SurfaceHolder holder, int x, int y, int z){
+        Rect r = new Rect(100,100,400,400);
+        Canvas c = getHolder().lockCanvas();
+        //c.drawRect(x - 50, y - 50, x+50, y+50,paint);
+        //squareBounder();
+        mario.draw(c);
+        c.drawRect(r, paint);
+        c.drawBitmap(bMap,r,r,paint);
+        //bmap(c);
+        getHolder().unlockCanvasAndPost(c);
+        postInvalidate();
     }
+
+
+
+
 
     public void run(){
         while (running){
@@ -69,17 +96,17 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 if(!getHolder().getSurface().isValid()){
                     continue;
                 }
-                Rect r = new Rect(100,100,400,400);
                 Canvas c = getHolder().lockCanvas();
-                //c.drawRect(x - 50, y - 50, x+50, y+50,paint);
-                //squareBounder();
+                Rect r = new Rect(100,100,400,400);
 
-                c.drawRect(mBlock,paint);
-                c.drawRect(r, paint);
+
+                mario.draw(c);
+                //c.drawRect(r, paint);
                 c.drawBitmap(bMap,r,r,paint);
-                bmap(c);
-                invalidate();
+                //bmap(c);
                 getHolder().unlockCanvasAndPost(c);
+                postInvalidate();
+
             }
         }
     }
