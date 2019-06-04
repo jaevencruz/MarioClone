@@ -98,6 +98,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                         continue;
                     }
                     c = getHolder().lockCanvas();
+                    c.drawColor(Color.WHITE);
                     Rect r = new Rect(100, 100, 400, 400);
 
 
