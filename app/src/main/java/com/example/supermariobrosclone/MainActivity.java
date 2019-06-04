@@ -1,5 +1,6 @@
 package com.example.supermariobrosclone;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -53,7 +54,17 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     public boolean onTouch(View v, MotionEvent me){
         this.v.setX(me.getX());
         this.v.setY(me.getY());
-        this.v.mario.setPosition(me.getX(),me.getY());
+        //this.v.mario.setPosition(me.getX(),me.getY());
+        if(me.getX() > Resources.getSystem().getDisplayMetrics().widthPixels/2){
+            for(int i = 0; i < 10; i++) {
+                this.v.mario.moveRight();
+            }
+        }
+        else{
+            for(int i = 0; i < 10; i++) {
+                this.v.mario.moveLeft();
+            }
+        }
         v.invalidate();
         System.out.println("Nani?!");
         return false;

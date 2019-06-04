@@ -91,22 +91,25 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
     public void run(){
         while (running){
-            synchronized (getHolder()){
-                if(!getHolder().getSurface().isValid()){
-                    continue;
+            Canvas c = null;
+            try {
+                synchronized (getHolder()) {
+                    if (!getHolder().getSurface().isValid()) {
+                        continue;
+                    }
+                    c = getHolder().lockCanvas();
+                    Rect r = new Rect(100, 100, 400, 400);
+
+
+                    mario.draw(c);
+                    //c.drawRect(r, paint);
+                    c.drawBitmap(bMap, r, r, paint);
+                    //bmap(c);
+                    getHolder().unlockCanvasAndPost(c);
+                    postInvalidate();
+
                 }
-                Canvas c = getHolder().lockCanvas();
-                Rect r = new Rect(100,100,400,400);
-
-
-                mario.draw(c);
-                //c.drawRect(r, paint);
-                c.drawBitmap(bMap,r,r,paint);
-                //bmap(c);
-                getHolder().unlockCanvasAndPost(c);
-                postInvalidate();
-
-            }
+            }catch(Exception e){}
         }
     }
 
