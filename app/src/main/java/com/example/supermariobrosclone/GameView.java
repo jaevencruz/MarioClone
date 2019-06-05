@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.media.MediaPlayer;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -17,13 +16,14 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     static int sWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     static int sHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
-    Thread t;
+    Thread t = null;
     boolean running = false;
     Bitmap bMap = decodeSampledBitmapFromResource(getResources(),R.drawable.hsuhao, 100,100);
     float x,y,bMapWidth,bMapHeight;
     Paint paint = new Paint();
     int numHolder = 0;
-    RectPlayer mario = new RectPlayer(decodeSampledBitmapFromResource(getResources(),R.drawable.smallmario,100,100));
+    RectPlayer mario = new RectPlayer();
+    Rect mBlock = mario.returnRect();
 
 
 
@@ -52,42 +52,36 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     public void surfaceCreated(SurfaceHolder holder){
         System.out.println("sWidth is : "+sWidth+" and sHeight is : "+sHeight);
         mario.setPosition(sWidth/2,sHeight/2);
-
+        running = true;
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder){
-
     }
-
     @Override
     public void surfaceChanged(SurfaceHolder holder, int x, int y, int z){
-
     }
-
 
     public void run(){
         while (running){
-            Canvas c =  null;
-            try {
-                synchronized (getHolder()) {
-                    if (!getHolder().getSurface().isValid()) {
-                        continue;
-                    }
-                    c = getHolder().lockCanvas();
-                    c.drawColor(Color.BLUE);
-                    Rect r = new Rect(100, 100, 400, 400);
-
-                    //c.drawRect(r, paint);
-                    c.drawBitmap(bMap, r, r, paint);
-
-                    //bmap(c);
-                    mario.draw(c);
-                    getHolder().unlockCanvasAndPost(c);
-                    postInvalidate();
-
+            synchronized (getHolder()){
+                if(!getHolder().getSurface().isValid()){
+                    continue;
                 }
-            }catch(Exception e){}
+                Rect r = new Rect(100,100,400,400);
+                Canvas c = getHolder().lockCanvas();
+
+                //c.drawRect(x - 50, y - 50, x+50, y+50,paint);
+                //squareBounder();
+
+                c.drawRect(mBlock,paint);
+                c.drawRect(r, paint);
+                c.drawBitmap(bMap,r,r,paint);
+
+                bmap(c);
+                invalidate();
+                getHolder().unlockCanvasAndPost(c);
+            }
         }
     }
 
@@ -163,7 +157,11 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         int color, red, green, blue, blockside;
         blockside = sHeight/16;
         Bitmap blk;
-        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.pixelmap3);
+        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.pixelmap4);
+        b = Bitmap.createScaledBitmap(b, 100, 100, false);
+
+        System.out.println("The width is: " + b.getWidth() + "\n");
+        System.out.println("The height is: " + b.getHeight() + "\n");
         for(int i = 0; i < 24; i++){
             for(int j = 0; j < 12; j++){
                 color = b.getPixel(i,j);
@@ -172,35 +170,41 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 green = Color.green(color);
                 blk = block(red,blue,green,i,j);
                 canvas.drawBitmap(blk, i*blockside, j * blockside,null);
-                System.out.println("Printed a box \n");
+                canvas.drawBitmap(b,sWidth-100,0,null);
             }
         }
 
     }
     public Bitmap block(int r, int b, int g, int x, int y){
         int blockside = sHeight/16;
-        Bitmap blk = null;
+        Bitmap blk, ground, sky, brick;
         blk = BitmapFactory.decodeResource(getResources(), R.drawable.skyblu);
-        blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
+        Bitmap defaul = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
+        blk = defaul;
+        ground = BitmapFactory.decodeResource(getResources(), R.drawable.groundblock);
+        brick = BitmapFactory.decodeResource(getResources(), R.drawable.brickblock1);
+        sky = BitmapFactory.decodeResource(getResources(), R.drawable.skyblu);
+
         if(r == 0 && g ==0 && b==0)
         {
             //spawn a ground block if pixel is black
-            System.out.println("Groundblock printed at" + x + "and" + y);
-            blk = BitmapFactory.decodeResource(getResources(), R.drawable.groundblock);
+            System.out.println("Groundblock printed at " + x + "and " + y);
+            blk = ground;
             blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
         }
         else if (r==255 && g == 0 && b ==0){
             //spawn a breakable brick if pixel is red
-            blk = BitmapFactory.decodeResource(getResources(), R.drawable.brickblock1);
+            blk = brick;
             blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
         }
         else if(r == 0 && g == 0 && b==255){
             //spawn mario here if pixel is blue
         }
         else if(r ==255 && g==255 && b==255){
-            blk = BitmapFactory.decodeResource(getResources(), R.drawable.skyblu);
+            blk = sky;
             blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
         }
+
         return blk;
     }
 
