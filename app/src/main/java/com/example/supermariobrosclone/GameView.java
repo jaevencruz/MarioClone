@@ -79,6 +79,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 c.drawRect(mBlock,paint);
                 c.drawRect(r, paint);
                 c.drawBitmap(bMap,r,r,paint);
+                marioCollideRect(mario,r);
                 //bmap(c);
                 mario.draw(c);
                 invalidate();
@@ -153,6 +154,12 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
             for(int i = 0; i < 5; i++) {
                 y--;
             }
+        }
+    }
+
+    private void marioCollideRect(RectPlayer mar, Rect r){
+        if(mar.returnRect().intersect(r)){
+            mario.moveLeft();
         }
     }
     public void bmap(Canvas canvas){
