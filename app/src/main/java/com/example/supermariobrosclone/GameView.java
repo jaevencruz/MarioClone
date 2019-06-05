@@ -78,7 +78,9 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 c.drawRect(r, paint);
                 c.drawBitmap(bMap,r,r,paint);
 
+
                 bmap(c);
+                mario.draw(c);
                 invalidate();
                 getHolder().unlockCanvasAndPost(c);
             }
