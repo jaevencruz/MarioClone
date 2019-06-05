@@ -7,7 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.support.annotation.Nullable;
+import android.media.MediaPlayer;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -23,7 +23,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     float x,y,bMapWidth,bMapHeight;
     Paint paint = new Paint();
     int numHolder = 0;
-    RectPlayer mario = new RectPlayer();
+    RectPlayer mario = new RectPlayer(decodeSampledBitmapFromResource(getResources(),R.drawable.smallmario,100,100));
 
 
 
@@ -53,17 +53,6 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         System.out.println("sWidth is : "+sWidth+" and sHeight is : "+sHeight);
         mario.setPosition(sWidth/2,sHeight/2);
 
-        running = true;
-        Rect r = new Rect(100,100,400,400);
-        Canvas c = getHolder().lockCanvas();
-        //c.drawRect(x - 50, y - 50, x+50, y+50,paint);
-        //squareBounder();
-        mario.draw(c);
-        c.drawRect(r, paint);
-        c.drawBitmap(bMap,r,r,paint);
-        //bmap(c);
-        getHolder().unlockCanvasAndPost(c);
-        postInvalidate();
     }
 
     @Override
@@ -73,39 +62,27 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int x, int y, int z){
-        Rect r = new Rect(100,100,400,400);
-        Canvas c = getHolder().lockCanvas();
-        //c.drawRect(x - 50, y - 50, x+50, y+50,paint);
-        //squareBounder();
-        mario.draw(c);
-        c.drawRect(r, paint);
-        c.drawBitmap(bMap,r,r,paint);
-        //bmap(c);
-        getHolder().unlockCanvasAndPost(c);
-        postInvalidate();
+
     }
-
-
-
 
 
     public void run(){
         while (running){
-            Canvas c = null;
+            Canvas c =  null;
             try {
                 synchronized (getHolder()) {
                     if (!getHolder().getSurface().isValid()) {
                         continue;
                     }
                     c = getHolder().lockCanvas();
-                    c.drawColor(Color.WHITE);
+                    c.drawColor(Color.BLUE);
                     Rect r = new Rect(100, 100, 400, 400);
 
-
-                    mario.draw(c);
                     //c.drawRect(r, paint);
                     c.drawBitmap(bMap, r, r, paint);
+
                     //bmap(c);
+                    mario.draw(c);
                     getHolder().unlockCanvasAndPost(c);
                     postInvalidate();
 

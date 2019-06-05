@@ -1,10 +1,12 @@
 package com.example.supermariobrosclone;
 
+import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -15,11 +17,14 @@ import android.view.WindowManager;
 
 import java.io.File;
 
-public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
+public class MainActivity extends Activity implements View.OnTouchListener {
 
     SurfaceHolder transparentV;
     GameView v;
     float x,y;
+    boolean left_button;
+    boolean right_button;
+    boolean button = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +36,27 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         v = new GameView(this.getBaseContext());
         v = findViewById(R.id.gameView);
         v.setOnTouchListener(this);
+
         //v.setZOrderOnTop(true);
         //transparentV = v.getHolder();
         //transparentV.setFormat(PixelFormat.TRANSPARENT);
+
+
+        findViewById(R.id.btn_move_right).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    v.mario.moveRight();
+            }
+        });
+
+
+        findViewById(R.id.btn_move_left).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    v.mario.moveLeft();
+            }
+        });
+
 
 
 
@@ -54,17 +77,17 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     public boolean onTouch(View v, MotionEvent me){
         this.v.setX(me.getX());
         this.v.setY(me.getY());
-        //this.v.mario.setPosition(me.getX(),me.getY());
-        if(me.getX() > Resources.getSystem().getDisplayMetrics().widthPixels/2){
-            for(int i = 0; i < 10; i++) {
-                this.v.mario.moveRight();
-            }
-        }
-        else{
-            for(int i = 0; i < 10; i++) {
-                this.v.mario.moveLeft();
-            }
-        }
+        this.v.mario.setPosition(me.getX(),me.getY());
+
+            /*if (me.getX() > Resources.getSystem().getDisplayMetrics().widthPixels / 2) {
+                for (int i = 0; i < 10; i++) {
+                    this.v.mario.moveRight();
+                }
+            } else {
+                for (int i = 0; i < 10; i++) {
+                    this.v.mario.moveLeft();
+                }
+            }*/
         v.invalidate();
         System.out.println("Nani?!");
         return false;

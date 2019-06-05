@@ -1,5 +1,8 @@
 package com.example.supermariobrosclone;
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -7,18 +10,32 @@ import android.graphics.Rect;
 
 public class RectPlayer implements GameObject {
     private Rect playerRect;
-    private final int sizeRect = 100;
+    private int sWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+    private int sHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+    private int sizeRect = 100;
+    private int sizeRectWidth = sizeRect;
+    private int sizeRectHeight = sizeRect;
     private Paint paint = new Paint();
     private int x,y;
+    private Bitmap bitmap;
 
     public RectPlayer() {
         this.playerRect = new Rect();
-        this.paint.setColor(Color.BLUE);
+        this.paint.setColor(Color.RED);
+    }
+    public RectPlayer(Bitmap bitmap) {
+        this.playerRect = new Rect();
+        this.paint.setColor(Color.RED);
+        this.bitmap = bitmap;
     }
 
     @Override
-    public void draw(Canvas canvas){
-        canvas.drawRect(playerRect,paint);
+    public void draw(Canvas canvas) {
+        canvas.drawRect(playerRect, paint);
+        if (bitmap != null) {
+            canvas.drawBitmap(this.bitmap,null,playerRect,paint);
+        }
+
     }
 
     public Rect returnRect(){
@@ -30,7 +47,23 @@ public class RectPlayer implements GameObject {
     }
 
     public int returnY(){
-        return this.x;
+        return this.y;
+    }
+
+    public int returnPlayerHeight(){
+        return this.sizeRectHeight;
+    }
+
+    public int returnPlayerWidth(){
+        return this.sizeRectWidth;
+    }
+
+    public void setPlayerWidth(int width){
+        this.sizeRectWidth = width;
+    }
+
+    public void setPlayerHeight(int height){
+        this.sizeRectWidth = height;
     }
 
     public void resetPlayer(){
@@ -43,6 +76,10 @@ public class RectPlayer implements GameObject {
         this.y = y;
     }
 
+    public void setBitmap(Bitmap bitmap){
+        this.bitmap = bitmap;
+    }
+
     public void setPosition(float x, float y){
         this.playerRect.set((int)x-(sizeRect/2),(int)y-(sizeRect/2),(int)x+(sizeRect/2),(int)y+(sizeRect/2));
         this.x = (int)x;
@@ -50,12 +87,12 @@ public class RectPlayer implements GameObject {
     }
 
     public void moveRight(){
-        this.playerRect.offset(1,0);
+        this.playerRect.offset(10,0);
         this.x++;
     }
 
     public void moveLeft(){
-        this.playerRect.offset(-1,0);
+        this.playerRect.offset(-10,0);
         this.x--;
     }
 
