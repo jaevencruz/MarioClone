@@ -22,7 +22,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     float x,y,bMapWidth,bMapHeight;
     Paint paint = new Paint();
     int numHolder = 0;
-    RectPlayer mario = new RectPlayer();
+    RectPlayer mario = new RectPlayer(decodeSampledBitmapFromResource(getResources(),R.drawable.smallmario,100,100));
     Rect mBlock = mario.returnRect();
 
 
@@ -64,13 +64,15 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
     public void run(){
         while (running){
+            Canvas c = null;
             synchronized (getHolder()){
                 if(!getHolder().getSurface().isValid()){
                     continue;
                 }
-                Rect r = new Rect(100,100,400,400);
-                Canvas c = getHolder().lockCanvas();
 
+                Rect r = new Rect(100,100,400,400);
+                c = getHolder().lockCanvas();
+                c.drawColor(Color.WHITE);
                 //c.drawRect(x - 50, y - 50, x+50, y+50,paint);
                 //squareBounder();
 
