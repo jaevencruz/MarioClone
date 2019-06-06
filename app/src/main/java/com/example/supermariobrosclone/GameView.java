@@ -53,11 +53,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     public void surfaceCreated(SurfaceHolder holder){
         System.out.println("sWidth is : "+sWidth+" and sHeight is : "+sHeight);
         mario.setPosition(sWidth/2 -200,100);
-        Canvas c = getHolder().lockCanvas();
-        bmap(c);
-        getHolder().unlockCanvasAndPost(c);
         running = true;
-
     }
 
     @Override
@@ -199,7 +195,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     //public void canvas
     public void bmap(Canvas canvas){
         int color, red, green, blue, blockside;
-        blockside = sHeight/12;
+        blockside = sHeight/14;
         Bitmap blk;
         Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.pixelmap7);
         b = Bitmap.createScaledBitmap(b, 100, 100, false);
@@ -220,7 +216,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
     }
     public Bitmap block(int r, int b, int g, int x, int y){
-        int blockside = sHeight/12;
+        int blockside = sHeight/14;
         Bitmap blk, ground, sky, brick, question;
         blk = BitmapFactory.decodeResource(getResources(), R.drawable.skyblu);
         Bitmap defaul = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
