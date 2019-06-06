@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,10 +18,11 @@ import android.view.WindowManager;
 
 import java.io.File;
 
-public class MainActivity extends Activity implements View.OnTouchListener {
+public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
 
     SurfaceHolder transparentV;
     GameView v;
+
     float x,y;
     boolean left_button;
     boolean right_button;
@@ -36,6 +38,7 @@ public class MainActivity extends Activity implements View.OnTouchListener {
         v = new GameView(this.getBaseContext());
         v = findViewById(R.id.gameView);
         v.setOnTouchListener(this);
+
 
         //v.setZOrderOnTop(true);
         //transparentV = v.getHolder();
@@ -54,6 +57,18 @@ public class MainActivity extends Activity implements View.OnTouchListener {
             @Override
             public void onClick(View view) {
                     v.mario.moveLeft();
+            }
+        });
+
+        findViewById(R.id.btn_move_up).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for(int i = 0 ; i < 20; i++) {
+                    if(Rect.intersects(v.mario.returnRect(),v.r)){
+                        break;
+                    }
+                    v.mario.moveUp();
+                }
             }
         });
 
@@ -89,7 +104,6 @@ public class MainActivity extends Activity implements View.OnTouchListener {
                 }
             }*/
         v.invalidate();
-        System.out.println("Nani?!");
         return false;
     }
 

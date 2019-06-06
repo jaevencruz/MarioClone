@@ -18,12 +18,13 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
     Thread t = null;
     boolean running = false;
-    Bitmap bMap = decodeSampledBitmapFromResource(getResources(),R.drawable.hsuhao, 100,100);
+    Bitmap bMap = decodeSampledBitmapFromResource(getResources(),R.drawable.brickblock1, 100,100);
     float x,y,bMapWidth,bMapHeight;
     Paint paint = new Paint();
     int numHolder = 0;
-    RectPlayer mario = new RectPlayer(decodeSampledBitmapFromResource(getResources(),R.drawable.smallmario,100,100));
+    RectPlayer mario = new RectPlayer(decodeSampledBitmapFromResource(getResources(),R.drawable.smallmario,100,100), this.getContext());
     Rect mBlock = mario.returnRect();
+    Rect r = new Rect(700,400,800,500);
 
 
 
@@ -51,13 +52,14 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     @Override
     public void surfaceCreated(SurfaceHolder holder){
         System.out.println("sWidth is : "+sWidth+" and sHeight is : "+sHeight);
-        mario.setPosition(sWidth/2,sHeight/2);
+        mario.setPosition(sWidth/2 -200,100);
         running = true;
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder){
     }
+
     @Override
     public void surfaceChanged(SurfaceHolder holder, int x, int y, int z){
     }
@@ -69,18 +71,18 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 if(!getHolder().getSurface().isValid()){
                     continue;
                 }
-
-                Rect r = new Rect(100,100,400,400);
                 c = getHolder().lockCanvas();
                 c.drawColor(Color.WHITE);
+                frameShift();
                 //c.drawRect(x - 50, y - 50, x+50, y+50,paint);
                 //squareBounder();
 
                 c.drawRect(mBlock,paint);
                 c.drawRect(r, paint);
-                c.drawBitmap(bMap,r,r,paint);
-                marioCollideRect(mario,r);
+                c.drawBitmap(bMap,null,r,paint);
+                marioCollideRect(mario,r,paint);
                 //bmap(c);
+                marioGravity(r);
                 mario.draw(c);
                 invalidate();
                 getHolder().unlockCanvasAndPost(c);
@@ -157,11 +159,39 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         }
     }
 
-    private void marioCollideRect(RectPlayer mar, Rect r){
-        if(mar.returnRect().intersect(r)){
-            mario.moveLeft();
+    private void marioCollideRect(RectPlayer mar, Rect r,Paint p){
+        //Mario runs into a block from the right
+        if( mar.returnLastMove() == 1 && Rect.intersects(mar.returnRect(),r)){
+                mar.moveLeft();
+        }
+        else if( mar.returnLastMove() == 3 && Rect.intersects(mar.returnRect(),r)){
+            mar.moveRight();
+        }
+        else if(mar.returnLastMove() == 0 && Rect.intersects(mar.returnRect(),r)){
+            r.offset(-5000,-10);
+            p.setColor(Color.TRANSPARENT);
         }
     }
+
+    public void marioGravity(Rect r){
+        if(mario.returnRect().bottom + 11 > r.top  && mario.returnRect().left < r.right && mario.returnRect().right > r.left){
+
+            //mario.setOnTopBlock(true);
+        }
+        else if((mario.returnRect().centerY() < sHeight - 400) /**&& mario.returnIsOnBlock()**/){
+            mario.moveDown();
+            mario.setOnTopBlock(false);
+        }
+    }
+
+    public void frameShift(){
+        if(mario.returnRect().centerX() > sWidth/2){
+            mario.moveLeft();
+            r.offset(-10,0);
+        }
+    }
+
+    //public void canvas
     public void bmap(Canvas canvas){
         int color, red, green, blue, blockside;
         blockside = sHeight/16;

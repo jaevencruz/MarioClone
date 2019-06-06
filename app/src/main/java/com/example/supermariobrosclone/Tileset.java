@@ -1,6 +1,7 @@
 package com.example.supermariobrosclone;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -16,6 +17,9 @@ import android.view.View;
 public class Tileset {
 
     Bitmap bMap;
+    private int sWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+    private int sHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+    private int size = sWidth/16;
     Paint paint;
     Rect rectangle = new Rect();
     int blockType = 0;

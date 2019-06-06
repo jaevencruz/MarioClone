@@ -1,5 +1,7 @@
 package com.example.supermariobrosclone;
 
+import android.content.ContentQueryMap;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 public class RectPlayer implements GameObject {
+    private Context context;
     private Rect playerRect;
     private int sWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     private int sHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
@@ -18,15 +21,19 @@ public class RectPlayer implements GameObject {
     private Paint paint = new Paint();
     private int x,y;
     private Bitmap bitmap;
+    private int lastMove;
+    private boolean isOnBlock = false;
 
-    public RectPlayer() {
+    public RectPlayer(Context context) {
         this.playerRect = new Rect();
-        this.paint.setColor(Color.RED);
+        this.paint.setColor(Color.WHITE);
+        this.context = context;
     }
-    public RectPlayer(Bitmap bitmap) {
+    public RectPlayer(Bitmap bitmap, Context context) {
         this.playerRect = new Rect();
-        this.paint.setColor(Color.RED);
+        this.paint.setColor(Color.WHITE);
         this.bitmap = bitmap;
+        this.context = context;
     }
 
     @Override
@@ -35,6 +42,11 @@ public class RectPlayer implements GameObject {
         if (bitmap != null) {
             canvas.drawBitmap(this.bitmap,null,playerRect,paint);
         }
+
+    }
+
+    @Override
+    public void update(Canvas canvas){
 
     }
 
@@ -70,6 +82,18 @@ public class RectPlayer implements GameObject {
         setPosition(0,0);
     }
 
+    public void setOnTopBlock(boolean b){
+        this.isOnBlock = b;
+    }
+
+    public boolean returnIsOnBlock(){
+        return this.isOnBlock;
+    }
+
+    public int returnLastMove(){
+        return this.lastMove;
+    }
+
     public void setPosition(int x, int y){
         this.playerRect.set(x-(sizeRect/2),y-(sizeRect/2),x+(sizeRect/2),y+(sizeRect/2));
         this.x = x;
@@ -89,21 +113,28 @@ public class RectPlayer implements GameObject {
     public void moveRight(){
         this.playerRect.offset(10,0);
         this.x++;
+        this.lastMove = 1;
+        bitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.smallmario);
     }
 
     public void moveLeft(){
         this.playerRect.offset(-10,0);
         this.x--;
+        this.lastMove = 3;
+        bitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.smallmariobackwards);
     }
 
     public void moveUp(){
-        this.playerRect.offset(0,1);
+        this.playerRect.offset(0,-10);
         this.y++;
+        this.lastMove = 0;
     }
 
     public void moveDown(){
-        this.playerRect.offset(0,-1);
+        this.playerRect.offset(0,10);
         this.y--;
+        this.lastMove = 2;
+
     }
 
 }

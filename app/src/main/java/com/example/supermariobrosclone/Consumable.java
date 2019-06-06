@@ -14,6 +14,9 @@ public class Consumable implements GameObject {
         }
     }
 
+    @Override
+    public void update(Canvas canvas){}
+
     public Consumable(){
 
     }

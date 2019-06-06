@@ -13,6 +13,8 @@ public class Goomba implements GameObject {
     public void draw(Canvas canvas) {
 
     }
+    @Override
+    public void update(Canvas canvas){}
 
     public Goomba(){
 
