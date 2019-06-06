@@ -187,6 +187,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     public void frameShift(){
         if(mario.returnRect().centerX() > sWidth/2){
             mario.moveLeft();
+            mario.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.smallmario));
             r.offset(-10,0);
         }
     }
