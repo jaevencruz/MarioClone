@@ -73,7 +73,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 c = getHolder().lockCanvas();
                 c.drawColor(Color.BLUE);
                 //c.drawColor(Color.WHITE);
-                frameShift(mario);
+                frameShift(mario, r);
                 //c.drawRect(x - 50, y - 50, x+50, y+50,paint);
                 //squareBounder();
 
@@ -174,17 +174,17 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     }
 
     public void marioGravity(RectPlayer m,Rect r){
-        if(m.returnRect().bottom + 11 > r.top  && m.returnRect().left < r.right && m.returnRect().right > r.left){
+        if(m.returnRect().bottom + 1 > r.top  && m.returnRect().left < r.right && m.returnRect().right > r.left  && m.returnRect().top < r.top){
 
             //m.setOnTopBlock(true);
         }
-        else if((m.returnRect().centerY() < sHeight - 400) /**&& mario.returnIsOnBlock()**/){
+        else if((m.returnRect().centerY() < sHeight - 300) /**&& mario.returnIsOnBlock()**/){
             m.moveDown();
             m.setOnTopBlock(false);
         }
     }
 
-    public void frameShift(RectPlayer m){
+    public void frameShift(RectPlayer m, Rect r){
         if(m.returnRect().centerX() > sWidth/2){
             m.moveLeft();
             m.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.smallmario));

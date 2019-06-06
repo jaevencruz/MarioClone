@@ -19,7 +19,6 @@ public class RectPlayer implements GameObject {
     private int sizeRectWidth = sizeRect;
     private int sizeRectHeight = sizeRect;
     private Paint paint = new Paint();
-    private int x,y;
     private Bitmap bitmap;
     private int lastMove;
     private boolean isOnBlock = false;
@@ -55,11 +54,11 @@ public class RectPlayer implements GameObject {
     }
 
     public int returnX(){
-        return this.x;
+        return (int) this.playerRect.exactCenterX();
     }
 
     public int returnY(){
-        return this.y;
+        return (int) this.playerRect.exactCenterY();
     }
 
     public int returnPlayerHeight(){
@@ -90,14 +89,14 @@ public class RectPlayer implements GameObject {
         return this.isOnBlock;
     }
 
+
     public int returnLastMove(){
         return this.lastMove;
     }
 
     public void setPosition(int x, int y){
         this.playerRect.set(x-(sizeRect/2),y-(sizeRect/2),x+(sizeRect/2),y+(sizeRect/2));
-        this.x = x;
-        this.y = y;
+
     }
 
     public void setBitmap(Bitmap bitmap){
@@ -106,33 +105,27 @@ public class RectPlayer implements GameObject {
 
     public void setPosition(float x, float y){
         this.playerRect.set((int)x-(sizeRect/2),(int)y-(sizeRect/2),(int)x+(sizeRect/2),(int)y+(sizeRect/2));
-        this.x = (int)x;
-        this.y = (int)y;
     }
 
     public void moveRight(){
         this.playerRect.offset(10,0);
-        this.x++;
         this.lastMove = 1;
         bitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.smallmario);
     }
 
     public void moveLeft(){
         this.playerRect.offset(-10,0);
-        this.x--;
         this.lastMove = 3;
         bitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.smallmariobackwards);
     }
 
     public void moveUp(){
         this.playerRect.offset(0,-10);
-        this.y++;
         this.lastMove = 0;
     }
 
     public void moveDown(){
         this.playerRect.offset(0,10);
-        this.y--;
         this.lastMove = 2;
 
     }
