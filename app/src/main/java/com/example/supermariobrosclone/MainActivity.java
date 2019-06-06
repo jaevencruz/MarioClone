@@ -24,8 +24,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     GameView v;
 
     float x,y;
-    boolean left_button;
-    boolean right_button;
     boolean button = false;
 
     @Override
@@ -45,10 +43,20 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         //transparentV.setFormat(PixelFormat.TRANSPARENT);
 
 
+        /*findViewById(R.id.btn_move_right).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                        v.mario.moveRight();
+
+            }
+        });*/
+
         findViewById(R.id.btn_move_right).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    v.mario.moveRight();
+                try{
+                v.mario.moveRight();
+                }catch(Exception e){}
             }
         });
 
@@ -89,11 +97,42 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         v.resume();
     }
 
-    public boolean onTouch(View v, MotionEvent me){
+    public boolean onTouch(View s, MotionEvent me){
         this.v.setX(me.getX());
         this.v.setY(me.getY());
         this.v.mario.setPosition(me.getX(),me.getY());
+        switch(me.getAction()){
+            case MotionEvent.ACTION_BUTTON_PRESS:
+                findViewById(R.id.btn_move_right).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        v.mario.moveRight();
+                    }
+                });
 
+
+                findViewById(R.id.btn_move_left).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        v.mario.moveLeft();
+                    }
+                });
+
+                findViewById(R.id.btn_move_up).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        for(int i = 0 ; i < 20; i++) {
+                            if(Rect.intersects(v.mario.returnRect(),v.r)){
+                                break;
+                            }
+                            v.mario.moveUp();
+                        }
+                    }
+                });
+                break;
+             case MotionEvent.ACTION_BUTTON_RELEASE:
+                 break;
+        }
             /*if (me.getX() > Resources.getSystem().getDisplayMetrics().widthPixels / 2) {
                 for (int i = 0; i < 10; i++) {
                     this.v.mario.moveRight();

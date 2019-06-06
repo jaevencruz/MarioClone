@@ -53,7 +53,11 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     public void surfaceCreated(SurfaceHolder holder){
         System.out.println("sWidth is : "+sWidth+" and sHeight is : "+sHeight);
         mario.setPosition(sWidth/2 -200,100);
+        Canvas c = getHolder().lockCanvas();
+        bmap(c);
+        getHolder().unlockCanvasAndPost(c);
         running = true;
+
     }
 
     @Override
@@ -71,8 +75,9 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                     continue;
                 }
                 c = getHolder().lockCanvas();
-                c.drawColor(Color.WHITE);
-                frameShift();
+                c.drawColor(Color.BLUE);
+                //c.drawColor(Color.WHITE);
+                frameShift(mario);
                 //c.drawRect(x - 50, y - 50, x+50, y+50,paint);
                 //squareBounder();
 
@@ -81,7 +86,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 c.drawBitmap(bMap,null,r,paint);
                 marioCollideRect(mario,r,paint);
                 //bmap(c);
-                marioGravity(r);
+                marioGravity(mario,r);
                 mario.draw(c);
                 invalidate();
                 getHolder().unlockCanvasAndPost(c);
@@ -158,35 +163,35 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         }
     }
 
-    private void marioCollideRect(RectPlayer mar, Rect r,Paint p){
+    private void marioCollideRect(RectPlayer m, Rect r, Paint p){
         //Mario runs into a block from the right
-        if( mar.returnLastMove() == 1 && Rect.intersects(mar.returnRect(),r)){
-                mar.moveLeft();
+        if( m.returnLastMove() == 1 && Rect.intersects(m.returnRect(),r)){
+                m.moveLeft();
         }
-        else if( mar.returnLastMove() == 3 && Rect.intersects(mar.returnRect(),r)){
-            mar.moveRight();
+        else if( m.returnLastMove() == 3 && Rect.intersects(m.returnRect(),r)){
+            m.moveRight();
         }
-        else if(mar.returnLastMove() == 0 && Rect.intersects(mar.returnRect(),r)){
+        else if(m.returnLastMove() == 0 && Rect.intersects(m.returnRect(),r)){
             r.offset(-5000,-10);
             p.setColor(Color.TRANSPARENT);
         }
     }
 
-    public void marioGravity(Rect r){
-        if(mario.returnRect().bottom + 11 > r.top  && mario.returnRect().left < r.right && mario.returnRect().right > r.left){
+    public void marioGravity(RectPlayer m,Rect r){
+        if(m.returnRect().bottom + 11 > r.top  && m.returnRect().left < r.right && m.returnRect().right > r.left){
 
-            //mario.setOnTopBlock(true);
+            //m.setOnTopBlock(true);
         }
-        else if((mario.returnRect().centerY() < sHeight - 400) /**&& mario.returnIsOnBlock()**/){
-            mario.moveDown();
-            mario.setOnTopBlock(false);
+        else if((m.returnRect().centerY() < sHeight - 400) /**&& mario.returnIsOnBlock()**/){
+            m.moveDown();
+            m.setOnTopBlock(false);
         }
     }
 
-    public void frameShift(){
-        if(mario.returnRect().centerX() > sWidth/2){
-            mario.moveLeft();
-            mario.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.smallmario));
+    public void frameShift(RectPlayer m){
+        if(m.returnRect().centerX() > sWidth/2){
+            m.moveLeft();
+            m.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.smallmario));
             r.offset(-10,0);
         }
     }
