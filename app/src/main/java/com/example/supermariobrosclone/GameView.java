@@ -18,6 +18,9 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
     Thread t = null;
     boolean running = false;
+    static boolean start = true;
+    int blockside = sHeight/14;
+    static int cameraleft = 0;
     Bitmap bMap = decodeSampledBitmapFromResource(getResources(),R.drawable.brickblock1, 100,100);
     float x,y,bMapWidth,bMapHeight;
     Paint paint = new Paint();
@@ -25,6 +28,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     RectPlayer mario = new RectPlayer(decodeSampledBitmapFromResource(getResources(),R.drawable.smallmario,100,100), this.getContext());
     Rect mBlock = mario.returnRect();
     Rect r = new Rect(700,400,800,500);
+    Bitmap levelarray[][] = new Bitmap[100][12];
 
 
 
@@ -51,8 +55,10 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
     @Override
     public void surfaceCreated(SurfaceHolder holder){
+
         System.out.println("sWidth is : "+sWidth+" and sHeight is : "+sHeight);
         mario.setPosition(sWidth/2 -200,100);
+        bmap();
         running = true;
     }
 
@@ -74,6 +80,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 c.drawColor(Color.BLUE);
                 //c.drawColor(Color.WHITE);
                 frameShift(mario, r);
+                c.drawColor(Color.CYAN);
                 //c.drawRect(x - 50, y - 50, x+50, y+50,paint);
                 //squareBounder();
 
@@ -81,7 +88,18 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 c.drawRect(r, paint);
                 c.drawBitmap(bMap,null,r,paint);
                 marioCollideRect(mario,r,paint);
-                //bmap(c);
+
+                //this loop takes the level array and prints accordingly to mario's current position
+                for(int x = cameraleft; x<24; x++){
+                    for(int y = 0; y<12;y++){
+                        if(levelarray[x][y]!=null)
+                        c.drawBitmap(levelarray[x][y], x*blockside,y*blockside,null);
+                    }
+                }
+                //
+
+
+
                 marioGravity(mario,r);
                 mario.draw(c);
                 invalidate();
@@ -193,7 +211,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     }
 
     //public void canvas
-    public void bmap(Canvas canvas){
+    public void bmap(){
         int color, red, green, blue, blockside;
         blockside = sHeight/14;
         Bitmap blk;
@@ -202,15 +220,14 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
         System.out.println("The width is: " + b.getWidth() + "\n");
         System.out.println("The height is: " + b.getHeight() + "\n");
-        for(int i = 0; i < 24; i++){
+        for(int i = 0; i < 100; i++){
             for(int j = 0; j < 12; j++){
                 color = b.getPixel(i,j);
                 red = Color.red(color);
                 blue = Color.blue(color);
                 green = Color.green(color);
                 blk = block(red,blue,green,i,j);
-                canvas.drawBitmap(blk, i*blockside, j * blockside,null);
-                canvas.drawBitmap(b,sWidth-100,0,null);
+                levelarray[i][j]= blk;
             }
         }
 
@@ -218,9 +235,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     public Bitmap block(int r, int b, int g, int x, int y){
         int blockside = sHeight/14;
         Bitmap blk, ground, sky, brick, question;
-        blk = BitmapFactory.decodeResource(getResources(), R.drawable.skyblu);
-        Bitmap defaul = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
-        blk = defaul;
+        blk = null;
         ground = BitmapFactory.decodeResource(getResources(), R.drawable.groundblock);
         brick = BitmapFactory.decodeResource(getResources(), R.drawable.brickblock1);
         sky = BitmapFactory.decodeResource(getResources(), R.drawable.skyblu);
@@ -242,8 +257,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
             //spawn mario here if pixel is blue
         }
         else if(r ==255 && g==255 && b==255){
-            blk = sky;
-            blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
+            blk = null;
         }
         else if(r ==255 && g==255 && b==0){
             blk = question;
