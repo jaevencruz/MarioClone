@@ -8,7 +8,7 @@ public class maploader{
 
     public void bmap(){
         int color, red, green, blue;
-        Bitmap b = BitmapFactory.decodeFile("pixelmap1.png");
+        Bitmap b = BitmapFactory.decodeFile("/drawable/pixelmap1.png");
         for(int i = 0; i < 100; i++){
             for(int j = 0; i < 12; j++){
                 color = b.getPixel(i,j);

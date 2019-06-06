@@ -59,7 +59,6 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     @Override
     public void surfaceDestroyed(SurfaceHolder holder){
     }
-
     @Override
     public void surfaceChanged(SurfaceHolder holder, int x, int y, int z){
     }
