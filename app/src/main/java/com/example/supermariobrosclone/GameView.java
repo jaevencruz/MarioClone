@@ -161,7 +161,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         int color, red, green, blue, blockside;
         blockside = sHeight/12;
         Bitmap blk;
-        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.pixelmap5);
+        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.pixelmap7);
         b = Bitmap.createScaledBitmap(b, 100, 100, false);
 
         System.out.println("The width is: " + b.getWidth() + "\n");
