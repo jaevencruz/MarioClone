@@ -58,7 +58,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
         System.out.println("sWidth is : "+sWidth+" and sHeight is : "+sHeight);
         mario.setPosition(sWidth/2 -200,100);
-        bmap();
+        //bmap();
         running = true;
     }
 
@@ -77,8 +77,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                     continue;
                 }
                 c = getHolder().lockCanvas();
-                c.drawColor(Color.BLUE);
-                //c.drawColor(Color.WHITE);
+                c.drawColor(Color.WHITE);
                 frameShift(mario, r);
                 //c.drawRect(x - 50, y - 50, x+50, y+50,paint);
                 //squareBounder();
@@ -89,13 +88,13 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 marioCollideRect(mario,r,paint);
 
                 //this loop takes the level array and prints accordingly to mario's current position
-                for(int x = cameraleft; x<(24+cameraleft); x++){
+                /*for(int x = cameraleft; x<(24+cameraleft); x++){
                     for(int y = 0; y<12;y++){
                         if(levelarray[x][y]!=null) {
                             c.drawBitmap(levelarray[x][y], x * blockside, y * blockside, null);
                         }
                     }
-                }
+                }*/
                 //
 
 
@@ -153,7 +152,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         if(m.returnRect().centerX() > sWidth/2){
             m.moveLeft();
             m.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.smallmario));
-            //r.offset(-10,0);
+            r.offset(-10,0);
             if(cameraleft +24 < 100) {
                 cameraleft++;
             }

@@ -22,7 +22,7 @@ public class Goomba implements GameObject {
 
 
 
-    public void resetPlayer(){
+    public void resetGoomba(){
         setPosition(0,0);
     }
 
