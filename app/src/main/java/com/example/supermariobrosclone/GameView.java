@@ -80,7 +80,6 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 c.drawColor(Color.BLUE);
                 //c.drawColor(Color.WHITE);
                 frameShift(mario, r);
-                c.drawColor(Color.CYAN);
                 //c.drawRect(x - 50, y - 50, x+50, y+50,paint);
                 //squareBounder();
 
@@ -90,10 +89,11 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 marioCollideRect(mario,r,paint);
 
                 //this loop takes the level array and prints accordingly to mario's current position
-                for(int x = cameraleft; x<24; x++){
+                for(int x = cameraleft; x<(24+cameraleft); x++){
                     for(int y = 0; y<12;y++){
-                        if(levelarray[x][y]!=null)
-                        c.drawBitmap(levelarray[x][y], x*blockside,y*blockside,null);
+                        if(levelarray[x][y]!=null) {
+                            c.drawBitmap(levelarray[x][y], x * blockside, y * blockside, null);
+                        }
                     }
                 }
                 //
@@ -122,59 +122,6 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         running = true;
         t = new Thread(this);
         t.start();
-    }
-
-    private void squareBounder(){
-        if(x - 50 < 0 || y - 50 < 0){
-            this.numHolder = 0;
-        }
-        else if(x+50 > sWidth){
-            this.numHolder = 1;
-        }
-        else if(y + 50 > sHeight){
-            this.numHolder = 2;
-        }
-        else if(y + 50 > sHeight || x + 50 > sWidth){
-            this.numHolder = 3;
-        }
-        else{
-            return;
-        }
-    }
-
-    private void squareMover(){
-        if(numHolder == 0){
-            for(int i = 0; i < 5; i++) {
-                x++;
-            }
-            for(int i = 0; i < 5; i++) {
-                y++;
-            }
-        }
-        else if(numHolder == 1){
-            for(int i = 0; i < 5; i++) {
-                x--;
-            }
-            for(int i = 0; i < 5; i++) {
-                y++;
-            }
-        }
-        else if(numHolder == 2) {
-            for (int i = 0; i < 5; i++) {
-                x++;
-            }
-            for(int i = 0; i < 5; i++) {
-                y--;
-            }
-        }
-        else if(numHolder == 3) {
-            for(int i = 0; i < 5; i++) {
-                x--;
-            }
-            for(int i = 0; i < 5; i++) {
-                y--;
-            }
-        }
     }
 
     private void marioCollideRect(RectPlayer m, Rect r, Paint p){
@@ -206,7 +153,10 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         if(m.returnRect().centerX() > sWidth/2){
             m.moveLeft();
             m.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.smallmario));
-            r.offset(-10,0);
+            //r.offset(-10,0);
+            if(cameraleft +24 < 100) {
+                cameraleft++;
+            }
         }
     }
 
@@ -263,7 +213,6 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
             blk = question;
             blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
         }
-
 
         return blk;
     }

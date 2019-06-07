@@ -15,7 +15,7 @@ public class RectPlayer implements GameObject {
     private Rect playerRect;
     private int sWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     private int sHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
-    private int sizeRect = 100;
+    private int sizeRect = 80;
     private int sizeRectWidth = sizeRect;
     private int sizeRectHeight = sizeRect;
     private Paint paint = new Paint();
@@ -25,12 +25,12 @@ public class RectPlayer implements GameObject {
 
     public RectPlayer(Context context) {
         this.playerRect = new Rect();
-        this.paint.setColor(Color.WHITE);
+        this.paint.setColor(Color.RED);
         this.context = context;
     }
     public RectPlayer(Bitmap bitmap, Context context) {
         this.playerRect = new Rect();
-        this.paint.setColor(Color.WHITE);
+        this.paint.setColor(Color.RED);
         this.bitmap = bitmap;
         this.context = context;
     }
