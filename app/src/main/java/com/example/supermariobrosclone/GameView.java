@@ -92,7 +92,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 for(int x = cameraleft; x<(24+cameraleft); x++){
                     for(int y = 0; y<12;y++){
                         if(levelarray[x][y]!=null) {
-                            c.drawBitmap(levelarray[x][y], x * blockside, y * blockside, null);
+                            c.drawBitmap(levelarray[x][y], (x-cameraleft) * blockside, y * blockside, null);
                         }
                     }
                 }
