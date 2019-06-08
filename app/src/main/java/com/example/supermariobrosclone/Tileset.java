@@ -14,24 +14,40 @@ import android.util.AttributeSet;
 import android.view.View;
 
 
-public class Tileset {
+public class Tileset implements GameObject {
+    private Rect rect;
+    private Paint paint;
+    boolean collideable;
 
-    Bitmap bMap;
-    private int sWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
-    private int sHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
-    private int size = sWidth/16;
-    Paint paint;
-    Rect rectangle = new Rect();
-    int blockType = 0;
+    public Tileset(){
+        this.rect = new Rect();
+        this.paint = new Paint();
 
-
-    public void setBlockType(){
-        if(blockType == 0){
-            paint.setColor(Color.BLUE);
-        }
-        else if (blockType == 1){
-            paint.setColor(Color.GREEN);
-        }
     }
 
+    @Override
+    public void draw(Canvas canvas){
+        canvas.drawRect(rect,paint);
+    }
+
+    @Override
+    public void update(Canvas canvas){
+
+    }
+
+    public Paint returnPaint(){
+        return this.paint;
+    }
+
+    public Rect returnRect(){
+        return this.rect;
+    }
+
+    public void setCollideable(boolean b){
+        this.collideable = b;
+    }
+
+    public boolean isCollideable(){
+        return this.collideable;
+    }
 }

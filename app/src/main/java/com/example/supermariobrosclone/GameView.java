@@ -18,6 +18,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
     Thread t = null;
     boolean running = false;
+    boolean collided = false;
     static boolean start = true;
     int blockside = sHeight/14;
     static int cameraleft = 0;
@@ -29,17 +30,20 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     Rect mBlock = mario.returnRect();
     Rect r = new Rect(700,400,800,500);
     Bitmap levelarray[][] = new Bitmap[100][12];
+    Tileset tilesets[][] = new Tileset[100][12];
 
 
 
     public GameView(Context context){
         super(context);
+        init(context);
         getHolder().addCallback(this);
         paint.setColor(Color.RED);
     }
 
     public GameView(Context context, AttributeSet attributeSet){
         super(context,attributeSet);
+        init(context);
         getHolder().addCallback(this);
         paint.setColor(Color.RED);
     }
@@ -53,13 +57,14 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         this.y = y;
     }
 
+    private void init(Context context){
+        mario.setPosition(sWidth/14,100);
+        bmap();
+        running = true;
+    }
     @Override
     public void surfaceCreated(SurfaceHolder holder){
 
-        System.out.println("sWidth is : "+sWidth+" and sHeight is : "+sHeight);
-        mario.setPosition(sWidth/2 -200,100);
-        //bmap();
-        running = true;
     }
 
     @Override
@@ -77,29 +82,26 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                     continue;
                 }
                 c = getHolder().lockCanvas();
-                c.drawColor(Color.WHITE);
-                frameShift(mario, r);
+                c.drawColor(Color.CYAN);
+                frameShift(mario, tilesets);
                 //c.drawRect(x - 50, y - 50, x+50, y+50,paint);
                 //squareBounder();
 
-                c.drawRect(mBlock,paint);
-                c.drawRect(r, paint);
-                c.drawBitmap(bMap,null,r,paint);
-                marioCollideRect(mario,r,paint);
-
                 //this loop takes the level array and prints accordingly to mario's current position
-                /*for(int x = cameraleft; x<(24+cameraleft); x++){
+                for(int x = cameraleft; x<(24+cameraleft); x++){
                     for(int y = 0; y<12;y++){
                         if(levelarray[x][y]!=null) {
-                            c.drawBitmap(levelarray[x][y], (x-cameraleft) * blockside, y * blockside, null);
+                            //c.drawBitmap(levelarray[x][y], (x-cameraleft) * blockside, y * blockside, null);
+                            c.drawBitmap(levelarray[x][y],null, tilesets[x][y].returnRect(),null);
+
+                        }
+                        if(Rect.intersects(mario.returnRect(),tilesets[x][y].returnRect())) {
+                            marioGravity(mario, tilesets[x][y]);
+                            marioCollideRect(mario,tilesets[x][y].returnRect(),paint);
                         }
                     }
-                }*/
-                //
+                }
 
-
-
-                marioGravity(mario,r);
                 mario.draw(c);
                 invalidate();
                 getHolder().unlockCanvasAndPost(c);
@@ -125,10 +127,10 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
     private void marioCollideRect(RectPlayer m, Rect r, Paint p){
         //Mario runs into a block from the right
-        if( m.returnLastMove() == 1 && Rect.intersects(m.returnRect(),r)){
+        if( m.returnLastMove() == 1 && Rect.intersects(m.returnRect(),r) && m.returnRect().bottom + 1 < r.top){
                 m.moveLeft();
         }
-        else if( m.returnLastMove() == 3 && Rect.intersects(m.returnRect(),r)){
+        else if( m.returnLastMove() == 3 && Rect.intersects(m.returnRect(),r) && m.returnRect().bottom + 1 < r.top){
             m.moveRight();
         }
         else if(m.returnLastMove() == 0 && Rect.intersects(m.returnRect(),r)){
@@ -137,23 +139,31 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         }
     }
 
-    public void marioGravity(RectPlayer m,Rect r){
-        if(m.returnRect().bottom + 1 > r.top  && m.returnRect().left < r.right && m.returnRect().right > r.left  && m.returnRect().top < r.top){
+    public void marioGravity(RectPlayer m,Tileset r){
+        if (m.returnRect().bottom + 1 > r.returnRect().top && m.returnRect().left < r.returnRect().right && m.returnRect().right > r.returnRect().left && m.returnRect().centerY() < r.returnRect().centerY() && r.isCollideable()) {
+            while (Rect.intersects(m.returnRect(), r.returnRect())) {
+                m.returnRect().offset(0, -1);
+            }
 
-            //m.setOnTopBlock(true);
+            return;
         }
-        else if((m.returnRect().centerY() < sHeight - 300) /**&& mario.returnIsOnBlock()**/){
+        else {
             m.moveDown();
-            m.setOnTopBlock(false);
+
         }
     }
 
-    public void frameShift(RectPlayer m, Rect r){
+    public void frameShift(RectPlayer m, Tileset[][] tilesets){
         if(m.returnRect().centerX() > sWidth/2){
-            m.moveLeft();
-            m.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.smallmario));
-            r.offset(-10,0);
             if(cameraleft +24 < 100) {
+                m.moveLeft();
+                m.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.smallmario));
+                for(int i = 0; i < 100; i++ ) {
+                    for(int j = 0; j < 12; j++ ) {
+                        tilesets[i][j].returnRect().offset(-(sHeight/14), 0);
+
+                    }
+                }
                 cameraleft++;
             }
         }
@@ -171,12 +181,23 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         System.out.println("The height is: " + b.getHeight() + "\n");
         for(int i = 0; i < 100; i++){
             for(int j = 0; j < 12; j++){
+
                 color = b.getPixel(i,j);
                 red = Color.red(color);
                 blue = Color.blue(color);
                 green = Color.green(color);
                 blk = block(red,blue,green,i,j);
                 levelarray[i][j]= blk;
+                tilesets[i][j]=new Tileset();
+                tilesets[i][j].returnRect().set(i*(sHeight/14),j*(sHeight/14), (i*sHeight/14) + sHeight/14,(j*sHeight/14) + sHeight/14);
+                tilesets[i][j].returnPaint().setARGB(0,red,blue,green);
+                if(levelarray[i][j] == null) {
+                    tilesets[i][j].setCollideable(false);
+                }
+                else{
+                    tilesets[i][j].setCollideable(true);
+                }
+
             }
         }
 

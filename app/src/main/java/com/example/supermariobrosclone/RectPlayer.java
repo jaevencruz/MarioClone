@@ -25,12 +25,10 @@ public class RectPlayer implements GameObject {
 
     public RectPlayer(Context context) {
         this.playerRect = new Rect();
-        this.paint.setColor(Color.RED);
         this.context = context;
     }
     public RectPlayer(Bitmap bitmap, Context context) {
         this.playerRect = new Rect();
-        this.paint.setColor(Color.RED);
         this.bitmap = bitmap;
         this.context = context;
     }
@@ -39,7 +37,7 @@ public class RectPlayer implements GameObject {
     public void draw(Canvas canvas) {
         canvas.drawRect(playerRect, paint);
         if (bitmap != null) {
-            canvas.drawBitmap(this.bitmap,null,playerRect,paint);
+            canvas.drawBitmap(this.bitmap,null,playerRect,null);
         }
 
     }
@@ -96,7 +94,6 @@ public class RectPlayer implements GameObject {
 
     public void setPosition(int x, int y){
         this.playerRect.set(x-(sizeRect/2),y-(sizeRect/2),x+(sizeRect/2),y+(sizeRect/2));
-
     }
 
     public void setBitmap(Bitmap bitmap){
@@ -110,13 +107,15 @@ public class RectPlayer implements GameObject {
     public void moveRight(){
         this.playerRect.offset(10,0);
         this.lastMove = 1;
-        bitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.smallmario);
+
     }
 
     public void moveLeft(){
+        if(this.playerRect.left-1 < 0){
+            return;
+        }
         this.playerRect.offset(-10,0);
         this.lastMove = 3;
-        bitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.smallmariobackwards);
     }
 
     public void moveUp(){
@@ -129,5 +128,6 @@ public class RectPlayer implements GameObject {
         this.lastMove = 2;
 
     }
+
 
 }
