@@ -174,7 +174,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         int color, red, green, blue, blockside;
         blockside = sHeight/14;
         Bitmap blk;
-        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.pixelmap7);
+        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.pixelart8);
         b = Bitmap.createScaledBitmap(b, 100, 100, false);
 
         System.out.println("The width is: " + b.getWidth() + "\n");
@@ -204,12 +204,13 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     }
     public Bitmap block(int r, int b, int g, int x, int y){
         int blockside = sHeight/14;
-        Bitmap blk, ground, sky, brick, question;
+        Bitmap blk, ground, sky, brick, question, door;
         blk = null;
         ground = BitmapFactory.decodeResource(getResources(), R.drawable.groundblock);
         brick = BitmapFactory.decodeResource(getResources(), R.drawable.brickblock1);
         sky = BitmapFactory.decodeResource(getResources(), R.drawable.skyblu);
         question = BitmapFactory.decodeResource(getResources(), R.drawable.question);
+        door = BitmapFactory.decodeResource(getResources(), R.drawable.mariodoor);
 
         if(r == 0 && g ==0 && b==0)
         {
@@ -223,8 +224,9 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
             blk = brick;
             blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
         }
-        else if(r == 0 && g == 0 && b==255){
-            //spawn mario here if pixel is blue
+        else if(r == 0 && g == 255 && b==255){
+            blk = door;
+            blk = Bitmap.createScaledBitmap(blk, blockside, blockside * 2, false);
         }
         else if(r ==255 && g==255 && b==255){
             blk = null;
