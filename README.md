@@ -1,29 +1,29 @@
-# Assignment 4 - *Project Name*
+# Assignment 4 - *Super Mario*
 
-**Project Name** Project description.
+**Project Name** Super Mario Bros Clone.
 
 Team Name:
-* **Student Name 1**
-  - UCInetID
-* **Student Name 2**
-  - UCInetID
+* **Jaeven Laron**
+  - jlaron
+* **Aaron Su**
+  - aaronys
 
 ## Testing Specifications
 Name your specifications here:
-* What emulator shoule graders use? Example) Pixel 2
-* Should graders use an Android phone?
+* What emulator shoule graders use? Example) Pixel API 28
+* Should graders use an Android phone?  Should work with either Android or Emulator
 * Any other requirements?
 
 ## Functionalities
 [//]: # (Write [x] to mark off what was accomplished.<br/>)
 The following **required** functionality is complete:
 
-* [ ] Game scrolls across the level in landscape fashion
+* [X] Game scrolls across the level in landscape fashion
 * [ ] There are 3 levels and Mario has 3 lives
 * [ ] Game keeps a running score 
 * [ ] Game keeps track of Mario's lives
 * Mario can collect the following items by running into them: 
-	- [ ] Brick Blocks (10 points)
+	- [X] Brick Blocks (10 points)
 	- [ ] Coins (200 points, common)
 	- [ ] Super Mushroom (1000 points, less common)
 	- [ ] Starman (1000 points, less common)
@@ -34,8 +34,8 @@ The following **required** functionality is complete:
 	- [ ] Little Goomba
 	- [ ] Piranha Plant
 * The following interactions are implemented: 
-   - [ ] Mario can move side to side
-   - [ ] Mario can jump
+   - [X] Mario can move side to side
+   - [X] Mario can jump
    - [ ] When Mario jumps on top of a Goomba, he defeats the Goomba
    - [ ] Mario gets hurt when he runs into a Goomba or a Piranha Plant (unless he is Invincible Mario)
    - [ ] Invincible Mario defeats all enemies in contact
