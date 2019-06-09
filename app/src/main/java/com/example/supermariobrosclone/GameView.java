@@ -31,6 +31,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     Rect r = new Rect(700,400,800,500);
     Bitmap levelarray[][] = new Bitmap[100][12];
     Tileset tilesets[][] = new Tileset[100][12];
+    static int level = 1;
 
 
 
@@ -59,7 +60,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
     private void init(Context context){
         mario.setPosition(sWidth/14,100);
-        bmap();
+        bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level1));
         running = true;
     }
     @Override
@@ -96,6 +97,27 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
                         }
                         if(Rect.intersects(mario.returnRect(),tilesets[x][y].returnRect())) {
+                            if(x>=87 && level==1)
+                            {
+                                System.out.println("Loading lvl2 \n");
+                                bmap(BitmapFactory.decodeResource(getResources(), R.drawable.pixelmap3));
+                                mario.setPosition(sWidth/14,100);
+                                cameraleft = 0;
+                                level = 2;
+
+                            }
+                            else if(x>=87 && level==2)
+                            {
+                                System.out.println("Loading lvl3 \n");
+                                bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level1));
+                                mario.setPosition(sWidth/14,100);
+                                cameraleft = 0;
+                                level = 3;
+                            }
+                            else if(x>=87 && level==3)
+                            {
+                                System.out.println("You Win \n");
+                            }
                             marioGravity(mario, tilesets[x][y]);
                             marioCollideRect(mario,tilesets[x][y].returnRect(),paint);
                         }
@@ -170,13 +192,14 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     }
 
     //public void canvas
-    public void bmap(){
+
+
+    public void bmap(Bitmap b){
         int color, red, green, blue, blockside;
         blockside = sHeight/14;
         Bitmap blk;
-        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.pixelart8);
+        //b = BitmapFactory.decodeResource(getResources(), R.drawable.level1);
         b = Bitmap.createScaledBitmap(b, 100, 100, false);
-
         System.out.println("The width is: " + b.getWidth() + "\n");
         System.out.println("The height is: " + b.getHeight() + "\n");
         for(int i = 0; i < 100; i++){
@@ -204,13 +227,14 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     }
     public Bitmap block(int r, int b, int g, int x, int y){
         int blockside = sHeight/14;
-        Bitmap blk, ground, sky, brick, question, door;
+        Bitmap blk, ground, sky, brick, question, door, pipe;
         blk = null;
         ground = BitmapFactory.decodeResource(getResources(), R.drawable.groundblock);
         brick = BitmapFactory.decodeResource(getResources(), R.drawable.brickblock1);
         sky = BitmapFactory.decodeResource(getResources(), R.drawable.skyblu);
         question = BitmapFactory.decodeResource(getResources(), R.drawable.question);
-        door = BitmapFactory.decodeResource(getResources(), R.drawable.mariodoor);
+        door = BitmapFactory.decodeResource(getResources(), R.drawable.allblack);
+        pipe = BitmapFactory.decodeResource(getResources(), R.drawable.allgreen);
 
         if(r == 0 && g ==0 && b==0)
         {
@@ -226,13 +250,17 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         }
         else if(r == 0 && g == 255 && b==255){
             blk = door;
-            blk = Bitmap.createScaledBitmap(blk, blockside, blockside * 2, false);
+            blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
         }
         else if(r ==255 && g==255 && b==255){
             blk = null;
         }
         else if(r ==255 && g==255 && b==0){
             blk = question;
+            blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
+        }
+        else if(r ==0 && g==255 && b==0){
+            blk = pipe;
             blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
         }
 
