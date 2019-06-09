@@ -21,16 +21,24 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     boolean reset = false;
     boolean loadLvl = false;
     static boolean start = true;
+    boolean marioDeath = false;
+    boolean gameOverState = false;
+    boolean winState = false;
     int blockside = sHeight/14;
     int score = 0;
-    int lives = 3;
+    int lives = 0;
+    int deathJumpCounter = 100;
     static int cameraleft = 0;
     Bitmap bMap = decodeSampledBitmapFromResource(getResources(),R.drawable.brickblock1, 100,100);
-    Bitmap load = decodeSampledBitmapFromResource(getResources(),R.drawable.hsuhao, 200, 200);
+    Bitmap load = decodeSampledBitmapFromResource(getResources(),R.drawable.loadingscreen, 200, 200);
+    Bitmap deadMario = decodeSampledBitmapFromResource(getResources(),R.drawable.deadmario, 100, 100);
+    Bitmap smallMario = decodeSampledBitmapFromResource(getResources(),R.drawable.smallmarioright,100,100);
+    Bitmap gameOverScreen = decodeSampledBitmapFromResource(getResources(),R.drawable.gameoverscreen,200,200);
+    Bitmap winnerSceen = decodeSampledBitmapFromResource(getResources(),R.drawable.yourewinner, 400, 200);
     float x,y;
     Paint paint = new Paint();
     Goomba goombaone = new Goomba(decodeSampledBitmapFromResource(getResources(),R.drawable.goombaleft,100,100),this.getContext());
-    RectPlayer mario = new RectPlayer(decodeSampledBitmapFromResource(getResources(),R.drawable.smallmario,100,100), this.getContext());
+    RectPlayer mario = new RectPlayer(smallMario, this.getContext());
     Bitmap levelarray[][] = new Bitmap[100][12];
     Tileset tilesets[][] = new Tileset[100][12];
     Tileset resetLevelArray[][] = new Tileset[100][12];
@@ -90,17 +98,96 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     public void run(){
         while (running){
             Canvas c = null;
-            if(lives == 0){
+            if(winState){
+                winState = false;
+                System.out.println("You Win \n");
+                lives = 3;
+                System.out.println("Starting over \n");
+                level = 1;
+                cameraleft = 0;
+                score = 0;
+                c = getHolder().lockCanvas();
+                c.drawColor(Color.BLACK);
+                c.drawBitmap(winnerSceen, 0, sHeight/2 - 600,null);
+                getHolder().unlockCanvasAndPost(c);
+                bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level1));
+                continue;
+            }
+            if(lives < 0){
+                gameOverState = true;
                 System.out.println("Game Over");
                 lives = 3;
+                while (gameOverState){
+                    c = getHolder().lockCanvas();
+                    c.drawColor(Color.BLACK);
+                    c.drawBitmap(gameOverScreen, sWidth/2 - 400, sHeight/2 - 400,null);
+                    getHolder().unlockCanvasAndPost(c);
+                }
+                bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level1));
+                continue;
             }
             if(loadLvl){
                 loadLvl = false;
+                mario.setPosition(sWidth/7,300);
+                cameraleft = 0;
                 c = getHolder().lockCanvas();
                 c.drawColor(Color.BLACK);
-                c.drawBitmap(load, sWidth/2 - 100, sHeight/2,null);
+                c.drawBitmap(load, sWidth/2 - 400, sHeight/2 - 400,null);
                 getHolder().unlockCanvasAndPost(c);
-                bmap(BitmapFactory.decodeResource(getResources(), R.drawable.pixelmap3));
+                if(level == 2) {
+                    bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level2));
+                }
+                else if(level == 3){
+                    System.out.println("Loading lvl3 \n");
+                    bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level2));
+                }
+                continue;
+            }
+            if(marioDeath){
+                mario.setBitmap(deadMario);
+                for(int i = deathJumpCounter; i > 0; i--)
+                {
+                    c = getHolder().lockCanvas();
+                    c.drawColor(Color.CYAN);
+                    for(int x = cameraleft; x<(24+cameraleft); x++) {
+                        for (int y = 0; y < 12; y++) {
+                            if (tilesets[x][y].isDraw()) {
+                                tilesets[x][y].draw(c);
+                            }
+                        }
+                    }
+                    mario.moveUp();
+                    mario.draw(c);
+                    invalidate();
+                    getHolder().unlockCanvasAndPost(c);
+                }
+                while (mario.returnRect().top < sHeight){
+                    c = getHolder().lockCanvas();
+                    c.drawColor(Color.CYAN);
+                    for(int x = cameraleft; x<(24+cameraleft); x++) {
+                        for (int y = 0; y < 12; y++) {
+                            if (tilesets[x][y].isDraw()) {
+                                tilesets[x][y].draw(c);
+                            }
+                        }
+                    }
+                    mario.moveDown();
+                    mario.draw(c);
+                    invalidate();
+                    getHolder().unlockCanvasAndPost(c);
+                }
+                deathJumpCounter = 100;
+                lives-=1;
+                cameraleft = 0;
+                marioDeath = false;
+                mario.setBitmap(smallMario);
+                mario.setPosition(sWidth/7,400);
+                c = getHolder().lockCanvas();
+                c.drawColor(Color.BLACK);
+                c.drawBitmap(winnerSceen, 0, sHeight/2 - 600,null);
+                invalidate();
+                getHolder().unlockCanvasAndPost(c);
+                bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level1));
                 continue;
             }
             synchronized (getHolder()){
@@ -118,9 +205,8 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 //this loop takes the level array and prints accordingly to mario's current position
                 for(int x = cameraleft; x<(24+cameraleft); x++){
                     for(int y = 0; y<12;y++){
-                        if(/**levelarray[x][y]!=null &&**/ tilesets[x][y].isDraw()) {
-                            //c.drawBitmap(tilesets[x][y].bitmap, (x-cameraleft) * blockside, y * blockside, null);
-                            //c.drawBitmap(levelarray[x][y],null, tilesets[x][y].returnRect(),null);
+                        if(tilesets[x][y].isDraw()) {
+
                             tilesets[x][y].draw(c);
                         }
                         if(Rect.intersects(mario.returnRect(),tilesets[x][y].returnRect())) {
@@ -156,27 +242,24 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                             }
                             else if(x>=87 && level==2)
                             {
-                                System.out.println("Loading lvl3 \n");
-                                bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level1));
-                                mario.setPosition(sWidth/7,300);
-                                cameraleft = 0;
+                                //System.out.println("Loading lvl3 \n");
+                                //bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level2));
+                                //mario.setPosition(sWidth/7,300);
+                                //cameraleft = 0;
                                 level = 3;
+                                loadLvl = true;
+                                break;
                             }
                             else if(x>=87 && level==3)
                             {
                                 System.out.println("You Win \n");
-                                lives = 3;
-                                System.out.println("Starting over \n");
-                                bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level1));
-                                level = 1;
-                                cameraleft = 0;
+                                winState = true;
+                                break;
                             }
                             else if(tilesets[x][y].returnType()==5)
                             {
                                 System.out.println("You Died \n");
-                                lives-=1;
-                                cameraleft = 0;
-                                mario.setPosition(sWidth/7,400);
+                                marioDeath = true;
                                 break;
                             }
 
@@ -190,7 +273,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                     }
                 }
 
-                if(reset){
+                if(reset || marioDeath){
                     reset = false;
                     invalidate();
 
@@ -257,7 +340,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
             return;
         }
         else {
-            m.returnRect().offset(0,2);
+            m.returnRect().offset(0,1);
 
         }
     }
@@ -457,7 +540,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         return BitmapFactory.decodeResource(res, resId, options);
     }
     public void jmpUp(RectPlayer m){
-        for(int k = 0 ; k < 15; k++) {
+        for(int k = 0 ; k < 25; k++) {
             m.moveUp();
             for(int i = 0; i<100;i++){
                 for(int j = 0; j <12;j++){

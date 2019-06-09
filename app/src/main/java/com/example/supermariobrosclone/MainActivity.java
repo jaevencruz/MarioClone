@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             @Override
             public void onClick(View view) {
                     v.mario.moveRight();
-                    v.mario.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.smallmario));
+                    v.mario.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.smallmarioright));
                     v.mario.setLastMove(1);
             }
         });
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             @Override
             public void onClick(View view) {
                     v.mario.moveLeft();
-                    v.mario.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.smallmariobackwards));
+                    v.mario.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.smallmarioleft));
                     v.mario.setLastMove(3);
             }
         });
@@ -80,15 +80,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         findViewById(R.id.btn_rt_up).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for(int i = 0 ; i < 15; i++) {
-                    /*if(Rect.intersects(v.mario.returnRect(),v.r)){
-                        break;
-                    }*/
-                    v.mario.moveUp();
+                v.jmpUp(v.mario);
+                for(int i = 0; i < 20; i++) {
+                    v.mario.moveRight();
                 }
-                v.mario.moveRight();
-                v.mario.moveRight();
-                v.mario.moveRight();
                 v.mario.setLastMove(0);
             }
         });
@@ -114,52 +109,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         this.v.setX(me.getX());
         this.v.setY(me.getY());
         this.v.mario.setPosition(me.getX(),me.getY());
-        switch(me.getAction()){
-            case MotionEvent.ACTION_BUTTON_PRESS:
-                findViewById(R.id.btn_move_right).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        v.mario.moveRight();
-                    }
-                });
-
-
-                findViewById(R.id.btn_move_left).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        v.mario.moveLeft();
-                    }
-                });
-
-                findViewById(R.id.btn_move_up).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        for(int i = 0 ; i < 20; i++) {
-                            for(int j = 0; j < 100; j++){
-                                for(int k = 0; k <12; k++){
-                                    if(Rect.intersects(v.mario.returnRect(),v.tilesets[j][k].returnRect()) && v.levelarray[j][k] != null){
-                                        break;
-                                    }
-                                }
-                            }
-
-                            v.mario.moveUp();
-                        }
-                    }
-                });
-                break;
-             case MotionEvent.ACTION_BUTTON_RELEASE:
-                 break;
+        if(v.gameOverState){
+            v.gameOverState = false;
         }
-            /*if (me.getX() > Resources.getSystem().getDisplayMetrics().widthPixels / 2) {
-                for (int i = 0; i < 10; i++) {
-                    this.v.mario.moveRight();
-                }
-            } else {
-                for (int i = 0; i < 10; i++) {
-                    this.v.mario.moveLeft();
-                }
-            }*/
         v.invalidate();
         return false;
     }
