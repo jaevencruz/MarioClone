@@ -182,9 +182,9 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     }
 
     public void frameShift(RectPlayer m, Tileset[][] tilesets){
-        if(m.returnRect().centerX() > sWidth){
+        if(m.returnRect().centerX() > 2*sWidth/3){
             if(cameraleft +24 < 100) {
-                m.moveLeft();
+                m.returnRect().offset(-(sHeight/14),0);
                 m.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.smallmario));
                 for(int i = 0; i < 100; i++ ) {
                     for(int j = 0; j < 12; j++ ) {
