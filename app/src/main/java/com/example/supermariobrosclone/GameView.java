@@ -32,7 +32,8 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     Tileset tilesets[][] = new Tileset[100][12];
     static int level = 1;
     int temptype[][] = new int[100][12];
-
+    private String scorestr;
+    Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
 
     public GameView(Context context){
@@ -59,9 +60,14 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     }
 
     private void init(Context context){
+        scorestr = "Score: " + score;
+        textPaint.setColor(Color.BLACK);
+        setTextSizeForWidth(textPaint,200,scorestr);
         mario.setPosition(sWidth/7,400);
         goombaone.setPosition(3*(sWidth/4),100);
+        System.out.println("Loading level 1");
         bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level2));
+        System.out.println("Level 1 printed");
         running = true;
     }
     @Override
@@ -89,6 +95,8 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 c = getHolder().lockCanvas();
                 c.drawColor(Color.CYAN);
                 frameShift(mario, tilesets);
+                scorestr = "Score: " + score;
+                c.drawText(scorestr, 11*blockside, 150, textPaint);
                 //c.drawRect(x - 50, y - 50, x+50, y+50,paint);
                 //squareBounder();
 
@@ -112,10 +120,20 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                                     }
 
                             }
+                            if(tilesets[x][y].blockType==6)
+                            {
+                                score+=100;
+                                tilesets[x][y].blockType = -1;
+                                tilesets[x][y].bitmap = null;
+                                levelarray[x][y] = null;
+                                tilesets[x][y].setCollideable(false);
+                                tilesets[x][y].setDraw(false);
+
+                            }
                             if(x>=87 && level==1)
                             {
                                 System.out.println("Loading lvl2 \n");
-                                bmap(BitmapFactory.decodeResource(getResources(), R.drawable.pixelmap3));
+                                bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level1));
                                 mario.setPosition(sWidth/14,100);
                                 cameraleft = 0;
                                 level = 2;
@@ -132,10 +150,19 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                             else if(x>=87 && level==3)
                             {
                                 System.out.println("You Win \n");
+                                lives = 3;
+                                System.out.println("Starting over \n");
+                                bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level1));
+                                level = 1;
+                                cameraleft = 0;
                             }
                             else if(tilesets[x][y].returnType()==5)
                             {
                                 System.out.println("You Died \n");
+                                lives-=1;
+                                cameraleft = 0;
+                                mario.setPosition(sWidth/7,400);
+                                break;
                             }
                             marioCollideRect(mario,tilesets[x][y]);
                             marioGravity(mario, tilesets[x][y]);
@@ -257,7 +284,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     }
     public Bitmap block(int r, int b, int g, int x, int y){
         int blockside = sHeight/14;
-        Bitmap blk, ground, sky, brick, question, door, pipe;
+        Bitmap blk, ground, sky, brick, question, door, pipe, coin;
         blk = null;
         ground = BitmapFactory.decodeResource(getResources(), R.drawable.groundblock);
         brick = BitmapFactory.decodeResource(getResources(), R.drawable.brickblock1);
@@ -265,11 +292,11 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         question = BitmapFactory.decodeResource(getResources(), R.drawable.question);
         door = BitmapFactory.decodeResource(getResources(), R.drawable.allblack);
         pipe = BitmapFactory.decodeResource(getResources(), R.drawable.allgreen);
+        coin = BitmapFactory.decodeResource(getResources(), R.drawable.coin);
 
 
         if(r == 0 && g ==0 && b==0) {
             //spawn a ground block if pixel is black
-            System.out.println("Groundblock printed at " + x + "and " + y);
             blk = ground;
             blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
             temptype[x][y] = 0;
@@ -298,6 +325,11 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
             blk = pipe;
             blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
             temptype[x][y] = 4;
+        }
+        else if(r ==255 && g==0 && b==255){
+            blk = coin;
+            blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
+            temptype[x][y] = 6;
         }
 
         return blk;
@@ -356,4 +388,17 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
             }
         }
     }
+    private static void setTextSizeForWidth(Paint paint, float desiredWidth,
+                                            String text) {
+        final float testTextSize = 48f;
+
+        paint.setTextSize(testTextSize);
+        Rect bounds = new Rect();
+        paint.getTextBounds(text, 0, text.length(), bounds);
+
+        float desiredTextSize = testTextSize * desiredWidth / bounds.width();
+
+        paint.setTextSize(desiredTextSize);
+    }
+
 }
