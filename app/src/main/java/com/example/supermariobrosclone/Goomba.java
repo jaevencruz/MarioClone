@@ -1,6 +1,7 @@
 package com.example.supermariobrosclone;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,32 +10,38 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 public class Goomba implements GameObject {
+    private int sWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+    private int sHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
     private Context context;
     private Rect gRect;
     private Bitmap bitmap;
     private Paint paint;
     private int sizeRect = 80;
+    /*Goomba moves left when movePattern is false, Goomba moves right when movePattern is true;*/
     private boolean movePattern;
+    private boolean isAlive;
 
     public Goomba(Context context) {
         this.gRect = new Rect();
-        this.paint.setColor(Color.RED);
+        this.paint = new Paint();
         this.context = context;
         this.movePattern = false;
+        this.isAlive = true;
     }
     public Goomba(Bitmap bitmap, Context context) {
         this.gRect = new Rect();
-        this.paint.setColor(Color.RED);
+        this.paint = new Paint();
         this.bitmap = bitmap;
         this.context = context;
         this.movePattern = false;
+        this.isAlive = true;
     }
 
     @Override
     public void draw(Canvas canvas) {
         canvas.drawRect(gRect, paint);
         if (bitmap != null) {
-            canvas.drawBitmap(this.bitmap,null,gRect,paint);
+            canvas.drawBitmap(this.bitmap,null,gRect,null);
         }
 
     }
@@ -59,13 +66,13 @@ public class Goomba implements GameObject {
     }
 
     public void moveRight(){
-        this.gRect.offset(10,0);
+        this.gRect.offset(1,0);
 
     }
 
     public void moveLeft(){
 
-        this.gRect.offset(-10,0);
+        this.gRect.offset(-1,0);
 
     }
 
@@ -79,12 +86,25 @@ public class Goomba implements GameObject {
 
     }
 
-    public void MovePattern(){
-        if(movePattern){
-            moveLeft();
+    public void collision(){
+        if(this.gRect.left < 0){
+            setMovePattern(true);
         }
-        else{
+        else if(this.gRect.right > sWidth){
+            setMovePattern(false);
+        }
+    }
+
+    public void movement(){
+        if(movePattern){
             moveRight();
         }
+        else{
+            moveLeft();
+        }
+    }
+
+    public void setMovePattern(boolean b){
+        this.movePattern = b;
     }
 }

@@ -18,17 +18,16 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
     Thread t = null;
     boolean running = false;
-    boolean collided = false;
     static boolean start = true;
     int blockside = sHeight/14;
+    int score = 0;
+    int lives = 3;
     static int cameraleft = 0;
     Bitmap bMap = decodeSampledBitmapFromResource(getResources(),R.drawable.brickblock1, 100,100);
-    float x,y,bMapWidth,bMapHeight;
+    float x,y;
     Paint paint = new Paint();
-    int numHolder = 0;
+    Goomba goombaone = new Goomba(decodeSampledBitmapFromResource(getResources(),R.drawable.goombaleft,100,100),this.getContext());
     RectPlayer mario = new RectPlayer(decodeSampledBitmapFromResource(getResources(),R.drawable.smallmario,100,100), this.getContext());
-    Rect mBlock = mario.returnRect();
-    Rect r = new Rect(700,400,800,500);
     Bitmap levelarray[][] = new Bitmap[100][12];
     Tileset tilesets[][] = new Tileset[100][12];
 
@@ -59,6 +58,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
     private void init(Context context){
         mario.setPosition(sWidth/14,100);
+        goombaone.setPosition(3*(sWidth/4),100);
         bmap();
         running = true;
     }
@@ -77,6 +77,9 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     public void run(){
         while (running){
             Canvas c = null;
+            if(lives == 0){
+                System.out.println("Game Over");
+            }
             synchronized (getHolder()){
                 if(!getHolder().getSurface().isValid()){
                     continue;
@@ -102,6 +105,9 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                     }
                 }
 
+                goombaone.movement();
+                goombaone.collision();
+                goombaone.draw(c);
                 mario.draw(c);
                 invalidate();
                 getHolder().unlockCanvasAndPost(c);
@@ -154,7 +160,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     }
 
     public void frameShift(RectPlayer m, Tileset[][] tilesets){
-        if(m.returnRect().centerX() > sWidth/2){
+        if(m.returnRect().centerX() + 80 > sWidth/2){
             if(cameraleft +24 < 100) {
                 m.moveLeft();
                 m.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.smallmario));
