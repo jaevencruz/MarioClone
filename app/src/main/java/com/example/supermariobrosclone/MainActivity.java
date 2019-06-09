@@ -54,10 +54,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         findViewById(R.id.btn_move_right).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try{
                     v.mario.moveRight();
                     v.mario.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.smallmario));
-                }catch(Exception e){}
+                    v.mario.setLastMove(1);
             }
         });
 
@@ -67,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public void onClick(View view) {
                     v.mario.moveLeft();
                     v.mario.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.smallmariobackwards));
+                    v.mario.setLastMove(3);
             }
         });
 
@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             @Override
             public void onClick(View view) {
                v.jmpUp(v.mario);
+               v.mario.setLastMove(0);
             }
         });
         findViewById(R.id.btn_rt_up).setOnClickListener(new View.OnClickListener() {
@@ -86,6 +87,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     v.mario.moveUp();
                 }
                 v.mario.moveRight();
+                v.mario.moveRight();
+                v.mario.moveRight();
+                v.mario.setLastMove(0);
             }
         });
 

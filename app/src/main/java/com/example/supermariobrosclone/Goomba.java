@@ -16,9 +16,10 @@ public class Goomba implements GameObject {
     private Rect gRect;
     private Bitmap bitmap;
     private Paint paint;
-    private int sizeRect = 80;
+    private int sizeRect = sHeight/14;
     /*Goomba moves left when movePattern is false, Goomba moves right when movePattern is true;*/
     private boolean movePattern;
+    private int lastMove;
     private boolean isAlive;
 
     public Goomba(Context context) {
@@ -48,6 +49,9 @@ public class Goomba implements GameObject {
     @Override
     public void update(Canvas canvas){}
 
+    public Rect returnRect(){
+        return this.gRect;
+    }
 
     public void resetGoomba(){
         setPosition(0,0);
@@ -65,13 +69,19 @@ public class Goomba implements GameObject {
         this.gRect.set((int)x-(sizeRect/2),(int)y-(sizeRect/2),(int)x+(sizeRect/2),(int)y+(sizeRect/2));
     }
 
+    public int returnLastMove(){
+        return this.lastMove;
+    }
+    public void setLastMove(int l){
+        this.lastMove = l;
+    }
+
     public void moveRight(){
         this.gRect.offset(1,0);
 
     }
 
     public void moveLeft(){
-
         this.gRect.offset(-1,0);
 
     }
@@ -86,7 +96,7 @@ public class Goomba implements GameObject {
 
     }
 
-    public void collision(){
+    public void borderCollision(){
         if(this.gRect.left < 0){
             setMovePattern(true);
         }

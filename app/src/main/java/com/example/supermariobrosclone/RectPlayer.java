@@ -91,6 +91,9 @@ public class RectPlayer implements GameObject {
     public int returnLastMove(){
         return this.lastMove;
     }
+    public void setLastMove(int l){
+        this.lastMove = l;
+    }
 
     public void setPosition(int x, int y){
         this.playerRect.set(x-(sizeRect/2),y-(sizeRect/2),x+(sizeRect/2),y+(sizeRect/2));
@@ -105,6 +108,9 @@ public class RectPlayer implements GameObject {
     }
 
     public void moveRight(){
+        if(this.playerRect.right+1 > sWidth){
+            return;
+        }
         this.playerRect.offset(10,0);
         this.lastMove = 1;
 

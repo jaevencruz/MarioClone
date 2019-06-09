@@ -18,6 +18,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
     Thread t = null;
     boolean running = false;
+    boolean reset = false;
     static boolean start = true;
     int blockside = sHeight/14;
     int score = 0;
@@ -30,6 +31,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     RectPlayer mario = new RectPlayer(decodeSampledBitmapFromResource(getResources(),R.drawable.smallmario,100,100), this.getContext());
     Bitmap levelarray[][] = new Bitmap[100][12];
     Tileset tilesets[][] = new Tileset[100][12];
+    Tileset resetLevelArray[][] = new Tileset[100][12];
     static int level = 1;
     int temptype[][] = new int[100][12];
 
@@ -60,7 +62,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
     private void init(Context context){
         mario.setPosition(sWidth/7,400);
-        goombaone.setPosition(3*(sWidth/4),100);
+        goombaone.setPosition(3*(sWidth/4),400);
         bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level2));
         running = true;
     }
@@ -81,6 +83,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
             Canvas c = null;
             if(lives == 0){
                 System.out.println("Game Over");
+                lives = 3;
             }
             synchronized (getHolder()){
                 if(!getHolder().getSurface().isValid()){
@@ -116,7 +119,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                             {
                                 System.out.println("Loading lvl2 \n");
                                 bmap(BitmapFactory.decodeResource(getResources(), R.drawable.pixelmap3));
-                                mario.setPosition(sWidth/14,100);
+                                mario.setPosition(sWidth/7,300);
                                 cameraleft = 0;
                                 level = 2;
 
@@ -125,7 +128,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                             {
                                 System.out.println("Loading lvl3 \n");
                                 bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level1));
-                                mario.setPosition(sWidth/14,100);
+                                mario.setPosition(sWidth/7,300);
                                 cameraleft = 0;
                                 level = 3;
                             }
@@ -136,20 +139,35 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                             else if(tilesets[x][y].returnType()==5)
                             {
                                 System.out.println("You Died \n");
+                                /*cameraleft = 0;
+                                this.lives--;
+                                mario.setPosition(sWidth/7,400);
+                                bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level2));
+                                reset = true;
+                                break;*/
                             }
-                            marioCollideRect(mario,tilesets[x][y]);
-                            marioGravity(mario, tilesets[x][y]);
 
+                            marioCollideRect(mario,tilesets[x][y]);
+                            goombaCollision(goombaone,tilesets[x][y]);
+                            marioGravity(mario, tilesets[x][y]);
+                            goombaGravity(goombaone,tilesets[x][y]);
+                            goombaone.borderCollision();
                         }
 
                     }
                 }
 
-                goombaone.movement();
-                goombaone.collision();
-                goombaone.draw(c);
-                mario.draw(c);
-                invalidate();
+                if(reset){
+                    reset = false;
+                    invalidate();
+
+                }
+                else{
+                    goombaone.movement();
+                    goombaone.draw(c);
+                    mario.draw(c);
+                    invalidate();
+                }
                 getHolder().unlockCanvasAndPost(c);
             }
         }
@@ -171,32 +189,87 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         t.start();
     }
 
+    /**Mario behaviours**/
     private void marioCollideRect(RectPlayer m, Tileset r){
         //Mario runs into a block from the right
-        if( m.returnLastMove() == 1 && Rect.intersects(m.returnRect(),r.returnRect()) && r.isCollideable() ){
-                m.moveLeft();
-        }
-        //Mario runs into a block from the left
-        else if( m.returnLastMove() == 3 && Rect.intersects(m.returnRect(),r.returnRect()) && m.returnRect().bottom + 1 < r.returnRect().top){
-            m.moveRight();
-        }
-        else if(m.returnLastMove() == 0 && Rect.intersects(m.returnRect(),r.returnRect()) && r.isCollideable()){
-            r.setDraw(false);
+        if(Rect.intersects(m.returnRect(),r.returnRect()) && r.isCollideable()){
+            if( m.returnLastMove() == 1 && m.returnRect().bottom - 2 > r.returnRect().top && m.returnRect().centerX() < r.returnRect().left ){
+                while(Rect.intersects(m.returnRect(),r.returnRect()) && m.returnRect().right > r.returnRect().left) {
+                    m.returnRect().offset(-1,0);
+                }
+
+            }
+            //Mario runs into a block from the left
+            else if( m.returnLastMove() == 3 && m.returnRect().bottom - 2 > r.returnRect().top && m.returnRect().centerX() > r.returnRect().right ){
+                while(Rect.intersects(m.returnRect(),r.returnRect()) && m.returnRect().left < r.returnRect().right) {
+                    m.returnRect().offset(1,0);
+                }
+            }
+            /**Collide with breakable block**/
+            else if(m.returnLastMove() == 0 && Rect.intersects(m.returnRect(),r.returnRect()) && r.isCollideable() && m.returnRect().top > r.returnRect().top){
+                r.setDraw(false);
+                r.setCollideable(false);
+            }
         }
     }
 
     public void marioGravity(RectPlayer m,Tileset r){
-        if (Rect.intersects(m.returnRect(), r.returnRect()) && m.returnRect().bottom + 1 > r.returnRect().top /**&& m.returnRect().centerX() > r.returnRect().left  && m.returnRect().centerX() < r.returnRect().right**/  && r.isCollideable()) {
+        if (Rect.intersects(m.returnRect(), r.returnRect()) && m.returnRect().bottom > r.returnRect().top /**&& m.returnRect().centerX() > r.returnRect().left  && m.returnRect().centerX() < r.returnRect().right**/  && r.isCollideable()) {
             while (Rect.intersects(m.returnRect(), r.returnRect())) {
                 m.returnRect().offset(0, -1);
             }
             return;
         }
+        else if(m.returnRect().bottom + 1 == r.returnRect().top){
+            return;
+        }
         else {
-            m.moveDown();
+            m.returnRect().offset(0,2);
 
         }
     }
+    /**End Mario Behaviours**/
+
+    /**Enemy Behaviours**/
+    private void goombaCollision(Goomba g, Tileset r){
+        //Mario runs into a block from the right
+        if(Rect.intersects(g.returnRect(),r.returnRect()) && r.isCollideable()){
+            if( g.returnRect().bottom - 2 > r.returnRect().top && g.returnRect().centerX() < r.returnRect().left ){
+                while(Rect.intersects(g.returnRect(),r.returnRect()) && g.returnRect().right > r.returnRect().left) {
+                    g.returnRect().offset(-1,0);
+                }
+                g.setMovePattern(false);
+            }
+            //Mario runs into a block from the left
+            else if( g.returnRect().bottom - 2 > r.returnRect().top && g.returnRect().centerX() > r.returnRect().right ){
+                while(Rect.intersects(g.returnRect(),r.returnRect()) && g.returnRect().left < r.returnRect().right) {
+                    g.returnRect().offset(1,0);
+                }
+                g.setMovePattern(true);
+            }
+        }
+    }
+    public void goombaGravity(Goomba g,Tileset r){
+        if(Rect.intersects(g.returnRect(),r.returnRect())){
+            System.out.println("true");
+        }
+        if (Rect.intersects(g.returnRect(), r.returnRect()) && g.returnRect().bottom > r.returnRect().top && r.isCollideable()) {
+            System.out.println("Goomba colided");
+            while (Rect.intersects(g.returnRect(), r.returnRect())) {
+                g.returnRect().offset(0, -2);
+
+            }
+            return;
+        }
+        else if(g.returnRect().bottom + 1  == r.returnRect().top){
+            return;
+        }
+        else {
+            g.returnRect().offset(0,1);
+
+        }
+    }
+    /**End enemy behaviours**/
 
     public void frameShift(RectPlayer m, Tileset[][] tilesets){
         if(m.returnRect().centerX() > 2*sWidth/3){
@@ -237,13 +310,17 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 green = Color.green(color);
                 blk = block(red,blue,green,i,j);
                 //levelarray[i][j]= blk;
-                tilesets[i][j]=new Tileset(blk);
+                /*When level is initialized, it gets cloned into resetLevelArray and when Mario Dies, the level gets reset to its initial state */
+                if(tilesets[i][j] == null) {
+                    tilesets[i][j] = new Tileset(blk);
+                }
                 tilesets[i][j].returnRect().set(i*(sHeight/14),j*(sHeight/14), (i*sHeight/14) + sHeight/14,(j*sHeight/14) + sHeight/14);
                 tilesets[i][j].returnPaint().setARGB(255,red,blue,green);
-                //tilesets[i][j].returnPaint().setColor(Color.BLACK);
+
                 if(blk == null) {
                     tilesets[i][j].setCollideable(false);
                     tilesets[i][j].setDraw(false);
+
                 }
                 else{
                     tilesets[i][j].setCollideable(true);
@@ -344,16 +421,19 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     public void jmpUp(RectPlayer m){
         for(int k = 0 ; k < 15; k++) {
             m.moveUp();
-        for(int i = 0; i<100;i++){
-            for(int j = 0; j <12;j++){
-                if(Rect.intersects(m.returnRect(),tilesets[i][j].returnRect()) && tilesets[i][j].isCollideable()){
-                    while(Rect.intersects(m.returnRect(),tilesets[i][j].returnRect()) && tilesets[i][j].isCollideable()){
-                        m.returnRect().offset(0,1);
+            for(int i = 0; i<100;i++){
+                for(int j = 0; j <12;j++){
+                    if(Rect.intersects(m.returnRect(),tilesets[i][j].returnRect()) && tilesets[i][j].isCollideable()){
+                        while(Rect.intersects(m.returnRect(),tilesets[i][j].returnRect())){
+                            m.returnRect().offset(0,1);
+                        }
+                        tilesets[i][j].setDraw(false);
+                        tilesets[i][j].setCollideable(false);
+                        return;
                     }
-                    break;
                 }
             }
-            }
+
         }
     }
 }
