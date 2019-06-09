@@ -19,12 +19,14 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     Thread t = null;
     boolean running = false;
     boolean reset = false;
+    boolean loadLvl = false;
     static boolean start = true;
     int blockside = sHeight/14;
     int score = 0;
     int lives = 3;
     static int cameraleft = 0;
     Bitmap bMap = decodeSampledBitmapFromResource(getResources(),R.drawable.brickblock1, 100,100);
+    Bitmap load = decodeSampledBitmapFromResource(getResources(),R.drawable.hsuhao, 200, 200);
     float x,y;
     Paint paint = new Paint();
     Goomba goombaone = new Goomba(decodeSampledBitmapFromResource(getResources(),R.drawable.goombaleft,100,100),this.getContext());
@@ -40,16 +42,17 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
     public GameView(Context context){
         super(context);
-        init(context);
         getHolder().addCallback(this);
         paint.setColor(Color.RED);
+        init(context);
     }
 
     public GameView(Context context, AttributeSet attributeSet){
         super(context,attributeSet);
-        init(context);
+
         getHolder().addCallback(this);
         paint.setColor(Color.RED);
+        init(context);
     }
 
 
@@ -90,6 +93,15 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
             if(lives == 0){
                 System.out.println("Game Over");
                 lives = 3;
+            }
+            if(loadLvl){
+                loadLvl = false;
+                c = getHolder().lockCanvas();
+                c.drawColor(Color.BLACK);
+                c.drawBitmap(load, sWidth/2 - 100, sHeight/2,null);
+                getHolder().unlockCanvasAndPost(c);
+                bmap(BitmapFactory.decodeResource(getResources(), R.drawable.pixelmap3));
+                continue;
             }
             synchronized (getHolder()){
                 if(!getHolder().getSurface().isValid()){
@@ -136,11 +148,11 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                             if(x>=87 && level==1)
                             {
                                 System.out.println("Loading lvl2 \n");
-                                bmap(BitmapFactory.decodeResource(getResources(), R.drawable.pixelmap3));
+                                //bmap(BitmapFactory.decodeResource(getResources(), R.drawable.pixelmap3));
                                 mario.setPosition(sWidth/7,300);
                                 cameraleft = 0;
                                 level = 2;
-
+                                loadLvl = true;
                             }
                             else if(x>=87 && level==2)
                             {
