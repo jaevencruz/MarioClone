@@ -79,7 +79,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         mario.setPosition(sWidth/7,400);
         goombaone.setPosition(3*(sWidth/4),100);
         System.out.println("Loading level 1");
-        bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level2));
+        bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level1));
         System.out.println("Level 1 printed");
         running = true;
     }
@@ -139,7 +139,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 }
                 else if(level == 3){
                     System.out.println("Loading lvl3 \n");
-                    bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level2));
+                    bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level3));
                 }
                 continue;
             }
