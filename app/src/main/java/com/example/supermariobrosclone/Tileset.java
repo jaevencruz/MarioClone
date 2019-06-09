@@ -18,16 +18,27 @@ public class Tileset implements GameObject {
     private Rect rect;
     private Paint paint;
     boolean collideable;
+    Bitmap bitmap;
+    boolean draw = false;
 
     public Tileset(){
         this.rect = new Rect();
         this.paint = new Paint();
-
+        this.draw = false;
+    }
+    public Tileset(Bitmap b){
+        this.rect = new Rect();
+        this.paint = new Paint();
+        this.draw = false;
+        this.bitmap = b;
     }
 
     @Override
     public void draw(Canvas canvas){
         canvas.drawRect(rect,paint);
+        /*if (bitmap != null) {
+            canvas.drawBitmap(this.bitmap,null,rect,null);
+        }*/
     }
 
     @Override
@@ -47,7 +58,13 @@ public class Tileset implements GameObject {
         this.collideable = b;
     }
 
+    public void setDraw(boolean b){this.draw = b;}
+
     public boolean isCollideable(){
         return this.collideable;
+    }
+
+    public boolean isDraw(){
+        return this.draw;
     }
 }

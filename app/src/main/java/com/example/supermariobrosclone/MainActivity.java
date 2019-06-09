@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
-        v = new GameView(this.getBaseContext());
+        //v = new GameView(this.getBaseContext());
         v = findViewById(R.id.gameView);
         v.setOnTouchListener(this);
 
@@ -73,12 +73,19 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         findViewById(R.id.btn_move_up).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for(int i = 0 ; i < 25; i++) {
+               v.jmpUp(v.mario);
+            }
+        });
+        findViewById(R.id.btn_rt_up).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for(int i = 0 ; i < 15; i++) {
                     /*if(Rect.intersects(v.mario.returnRect(),v.r)){
                         break;
                     }*/
                     v.mario.moveUp();
                 }
+                v.mario.moveRight();
             }
         });
 
