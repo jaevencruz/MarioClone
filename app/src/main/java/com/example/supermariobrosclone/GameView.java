@@ -58,7 +58,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     }
 
     private void init(Context context){
-        mario.setPosition(sWidth/14,100);
+        mario.setPosition(sWidth/7,400);
         goombaone.setPosition(3*(sWidth/4),100);
         bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level1));
         running = true;
@@ -215,12 +215,12 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 blue = Color.blue(color);
                 green = Color.green(color);
                 blk = block(red,blue,green,i,j);
-                levelarray[i][j]= blk;
+                //levelarray[i][j]= blk;
                 tilesets[i][j]=new Tileset(blk);
                 tilesets[i][j].returnRect().set(i*(sHeight/14),j*(sHeight/14), (i*sHeight/14) + sHeight/14,(j*sHeight/14) + sHeight/14);
-                //tilesets[i][j].returnPaint().setARGB(0,red,blue,green);
-                tilesets[i][j].returnPaint().setColor(Color.BLACK);
-                if(levelarray[i][j] == null) {
+                tilesets[i][j].returnPaint().setARGB(255,red,blue,green);
+                //tilesets[i][j].returnPaint().setColor(Color.BLACK);
+                if(blk == null) {
                     tilesets[i][j].setCollideable(false);
                     tilesets[i][j].setDraw(false);
                 }
@@ -315,9 +315,6 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     }
     public void jmpUp(RectPlayer m){
         for(int k = 0 ; k < 15; k++) {
-                    /*if(Rect.intersects(v.mario.returnRect(),v.r)){
-                        break;
-                    }*/
             m.moveUp();
         for(int i = 0; i<100;i++){
             for(int j = 0; j <12;j++){

@@ -15,7 +15,7 @@ public class RectPlayer implements GameObject {
     private Rect playerRect;
     private int sWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     private int sHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
-    private int sizeRect = 80;
+    private int sizeRect = sHeight/14;
     private int sizeRectWidth = sizeRect;
     private int sizeRectHeight = sizeRect;
     private Paint paint = new Paint();

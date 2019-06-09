@@ -78,6 +78,8 @@
         android:text="Rt+Up"
         app:layout_constraintBottom_toBottomOf="@+id/gameView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.794"
         app:layout_constraintStart_toStartOf="@+id/gameView"
-        app:layout_constraintTop_toTopOf="@+id/gameView" />
+        app:layout_constraintTop_toTopOf="@+id/gameView"
+        app:layout_constraintVertical_bias="1.0" />
 </android.support.constraint.ConstraintLayout>

@@ -20,11 +20,13 @@ public class Tileset implements GameObject {
     boolean collideable;
     Bitmap bitmap;
     boolean draw = false;
+    int blockType;
 
     public Tileset(){
         this.rect = new Rect();
         this.paint = new Paint();
         this.draw = false;
+        this.blockType =0;
     }
     public Tileset(Bitmap b){
         this.rect = new Rect();
@@ -36,9 +38,9 @@ public class Tileset implements GameObject {
     @Override
     public void draw(Canvas canvas){
         canvas.drawRect(rect,paint);
-        /*if (bitmap != null) {
+        if (bitmap != null) {
             canvas.drawBitmap(this.bitmap,null,rect,null);
-        }*/
+        }
     }
 
     @Override
