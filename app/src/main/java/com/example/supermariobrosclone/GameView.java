@@ -31,6 +31,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     Bitmap levelarray[][] = new Bitmap[100][12];
     Tileset tilesets[][] = new Tileset[100][12];
     static int level = 1;
+    int temptype[][] = new int[100][12];
 
 
 
@@ -60,7 +61,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     private void init(Context context){
         mario.setPosition(sWidth/7,400);
         goombaone.setPosition(3*(sWidth/4),100);
-        bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level1));
+        bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level2));
         running = true;
     }
     @Override
@@ -95,11 +96,22 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 for(int x = cameraleft; x<(24+cameraleft); x++){
                     for(int y = 0; y<12;y++){
                         if(/**levelarray[x][y]!=null &&**/ tilesets[x][y].isDraw()) {
-                            //c.drawBitmap(levelarray[x][y], (x-cameraleft) * blockside, y * blockside, null);
+                            //c.drawBitmap(tilesets[x][y].bitmap, (x-cameraleft) * blockside, y * blockside, null);
                             //c.drawBitmap(levelarray[x][y],null, tilesets[x][y].returnRect(),null);
                             tilesets[x][y].draw(c);
                         }
                         if(Rect.intersects(mario.returnRect(),tilesets[x][y].returnRect())) {
+                            for(int g = x; g<(x+3); g++){
+
+                                    if(tilesets[g][y].returnType() == 4)
+                                    {
+                                        tilesets[g][y-1].setType(5);
+                                        tilesets[g][y-1].bitmap = piranha();
+                                        levelarray[g][y-1] = piranha();
+                                        tilesets[g][y-1].draw(c);
+                                    }
+
+                            }
                             if(x>=87 && level==1)
                             {
                                 System.out.println("Loading lvl2 \n");
@@ -121,10 +133,15 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                             {
                                 System.out.println("You Win \n");
                             }
+                            else if(tilesets[x][y].returnType()==5)
+                            {
+                                System.out.println("You Died \n");
+                            }
                             marioCollideRect(mario,tilesets[x][y]);
                             marioGravity(mario, tilesets[x][y]);
 
                         }
+
                     }
                 }
 
@@ -197,7 +214,11 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         }
     }
 
-
+    public Bitmap piranha(){
+        Bitmap pir = BitmapFactory.decodeResource(getResources(), R.drawable.pplant);
+        pir = Bitmap.createScaledBitmap(pir, blockside, blockside, false);
+        return pir;
+    }
 
     public void bmap(Bitmap b){
         int color, red, green, blue, blockside;
@@ -227,6 +248,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 else{
                     tilesets[i][j].setCollideable(true);
                     tilesets[i][j].setDraw(true);
+                    tilesets[i][j].setType(temptype[i][j]);
                 }
 
             }
@@ -244,32 +266,38 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         door = BitmapFactory.decodeResource(getResources(), R.drawable.allblack);
         pipe = BitmapFactory.decodeResource(getResources(), R.drawable.allgreen);
 
-        if(r == 0 && g ==0 && b==0)
-        {
+
+        if(r == 0 && g ==0 && b==0) {
             //spawn a ground block if pixel is black
             System.out.println("Groundblock printed at " + x + "and " + y);
             blk = ground;
             blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
+            temptype[x][y] = 0;
         }
         else if (r==255 && g == 0 && b ==0){
             //spawn a breakable brick if pixel is red
             blk = brick;
             blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
+            temptype[x][y] = 1;
         }
         else if(r == 0 && g == 255 && b==255){
             blk = door;
             blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
+            temptype[x][y] = 2;
         }
         else if(r ==255 && g==255 && b==255){
             blk = null;
+            temptype[x][y] = -1;
         }
         else if(r ==255 && g==255 && b==0){
             blk = question;
             blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
+            temptype[x][y] = 3;
         }
         else if(r ==0 && g==255 && b==0){
             blk = pipe;
             blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
+            temptype[x][y] = 4;
         }
 
         return blk;

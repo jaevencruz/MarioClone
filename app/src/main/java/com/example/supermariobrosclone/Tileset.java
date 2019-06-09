@@ -69,4 +69,8 @@ public class Tileset implements GameObject {
     public boolean isDraw(){
         return this.draw;
     }
+
+    public void setType(int t){this.blockType = t;}
+
+    public int returnType(){return this.blockType;}
 }
