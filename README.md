@@ -19,20 +19,20 @@ Name your specifications here:
 The following **required** functionality is complete:
 
 * [X] Game scrolls across the level in landscape fashion
-* [ ] There are 3 levels and Mario has 3 lives
-* [ ] Game keeps a running score 
-* [ ] Game keeps track of Mario's lives
+* [X] There are 3 levels and Mario has 3 lives
+* [X] Game keeps a running score 
+* [X] Game keeps track of Mario's lives
 * Mario can collect the following items by running into them: 
 	- [X] Brick Blocks (10 points)
-	- [ ] Coins (200 points, common)
+	- [X] Coins (200 points, common)
 	- [ ] Super Mushroom (1000 points, less common)
 	- [ ] Starman (1000 points, less common)
 * The following transformations are implemented: 
 	- [ ] Super Mario (item used: Super Mushroom)
 	- [ ] Invincible Mario (item used: Starman) 
 * The following enemies are implemented: 
-	- [ ] Little Goomba
-	- [ ] Piranha Plant
+	- [X] Little Goomba
+	- [X] Piranha Plant
 * The following interactions are implemented: 
    - [X] Mario can move side to side
    - [X] Mario can jump
