@@ -24,6 +24,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     boolean marioDeath = false;
     boolean gameOverState = false;
     boolean winState = false;
+    boolean cantkill = false;
     int blockside = sHeight/14;
     int score = 0;
     int lives = 0;
@@ -209,7 +210,19 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
                             tilesets[x][y].draw(c);
                         }
+                        if(tilesets[x][y].blockType==7)
+                        {
+                            tilesets[x][y].draw(c);
+                        }
                         if(Rect.intersects(mario.returnRect(),tilesets[x][y].returnRect())) {
+                            if(cantkill)
+                            {
+                                if(tilesets[x][y].blockType==5)
+                                {
+                                    tilesets[x][y+1].blockType = 0;
+                                    tilesets[x][y].blockType = 0;
+                                }
+                            }
                             for(int g = x; g<(x+3); g++){
 
                                     if(tilesets[g][y].returnType() == 4)
@@ -220,6 +233,16 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                                         tilesets[g][y-1].draw(c);
                                     }
 
+                            }
+                            if(tilesets[x][y].blockType==7)
+                            {
+                                score+=1000;
+                                cantkill = true;
+                                tilesets[x][y].blockType = -1;
+                                tilesets[x][y].bitmap = null;
+                                levelarray[x][y] = null;
+                                tilesets[x][y].setCollideable(false);
+                                tilesets[x][y].setDraw(false);
                             }
                             if(tilesets[x][y].blockType==6)
                             {
@@ -234,6 +257,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                             if(x>=87 && level==1)
                             {
                                 System.out.println("Loading lvl2 \n");
+                                cantkill = false;
                                 //bmap(BitmapFactory.decodeResource(getResources(), R.drawable.pixelmap3));
                                 mario.setPosition(sWidth/7,300);
                                 cameraleft = 0;
@@ -246,6 +270,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                                 //bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level2));
                                 //mario.setPosition(sWidth/7,300);
                                 //cameraleft = 0;
+                                cantkill = false;
                                 level = 3;
                                 loadLvl = true;
                                 break;
@@ -408,6 +433,11 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         pir = Bitmap.createScaledBitmap(pir, blockside, blockside, false);
         return pir;
     }
+    public Bitmap star(){
+        Bitmap pir = BitmapFactory.decodeResource(getResources(), R.drawable.staryu);
+        pir = Bitmap.createScaledBitmap(pir, blockside, blockside, false);
+        return pir;
+    }
 
     public void bmap(Bitmap b){
         int color, red, green, blue, blockside;
@@ -485,6 +515,8 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         else if(r ==255 && g==255 && b==0){
             blk = question;
             blk = Bitmap.createScaledBitmap(blk, blockside, blockside, false);
+            tilesets[x][y-1].bitmap = star();
+            tilesets[x][y-1].blockType = 7;
             temptype[x][y] = 3;
         }
         else if(r ==0 && g==255 && b==0){
