@@ -16,7 +16,7 @@ public class Consumable implements GameObject {
     private Bitmap bitmap;
     private Paint paint;
     private int sizeRect = sHeight/14;
-    /*Mushroom moves left when movePattern is false, Mushroom moves right when movePattern is true;*/
+    /*shroom moves left when movePattern is false, shroom moves right when movePattern is true;*/
     private boolean movePattern;
     private int lastMove;
     private boolean isAlive;

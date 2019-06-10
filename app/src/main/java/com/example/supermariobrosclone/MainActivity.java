@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public void onClick(View view) {
                     if(v.playerControl) {
                         v.mario.moveRight();
+                        v.mario.moveRight();
                         if(v.mario.returnMarioState() == 0 || v.mario.returnMarioState() == 2) {
                             v.mario.setBitmap(v.smallMario);
                         } else if(v.mario.returnMarioState() == 1 || v.mario.returnMarioState() == 3){
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             @Override
             public void onClick(View view) {
                 if (v.playerControl) {
+                    v.mario.moveLeft();
                     v.mario.moveLeft();
                     if(v.mario.returnMarioState() == 0 || v.mario.returnMarioState() == 2) {
                         v.mario.setBitmap(v.smallMarioLeft);
@@ -157,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         else if(me.getX() > v.sWidth/2){
             if(v.playerControl) {
                 v.mario.moveRight();
+                v.mario.moveRight();
                 if(v.mario.returnMarioState() == 0 || v.mario.returnMarioState() == 2) {
                     v.mario.setBitmap(v.smallMario);
                 } else if(v.mario.returnMarioState() == 1 || v.mario.returnMarioState() == 3){
@@ -167,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
         else if(me.getX() < v.sWidth/2){
             if (v.playerControl) {
+                v.mario.moveLeft();
                 v.mario.moveLeft();
                 if(v.mario.returnMarioState() == 0 || v.mario.returnMarioState() == 2) {
                     v.mario.setBitmap(v.smallMarioLeft);
