@@ -39,6 +39,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     static int cameraleft = 0;
     Bitmap mushroom = decodeSampledBitmapFromResource(getResources(),R.drawable.supermushroom, 100,100);
     Bitmap bg3 = decodeSampledBitmapFromResource(getResources(),R.drawable.forestpng, 1000,1000);
+    Bitmap bg1 = decodeSampledBitmapFromResource(getResources(),R.drawable.bg1, 700,700);
     Bitmap usedQuestion = decodeSampledBitmapFromResource(getResources(),R.drawable.usedquestion,100,100);
     Bitmap load = decodeSampledBitmapFromResource(getResources(),R.drawable.loadingscreen, 200, 200);
     Bitmap deadMario = decodeSampledBitmapFromResource(getResources(),R.drawable.deadmario, 100, 100);
@@ -67,6 +68,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     private String scorestr;
     private String livesStr;
     Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint textPaintLight = new Paint(Paint.ANTI_ALIAS_FLAG);
 
 
     public GameView(Context context){
@@ -94,11 +96,14 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     }
 
     private void init(Context context){
+        textPaintLight.setColor(Color.WHITE);
         scorestr = "Score: " + score;
         livesStr = "Lives: " + lives;
         textPaint.setColor(Color.BLACK);
         setTextSizeForWidth(textPaint,200,scorestr);
         setTextSizeForWidth(textPaint,200,livesStr);
+        setTextSizeForWidth(textPaintLight,200,scorestr);
+        setTextSizeForWidth(textPaintLight,200,livesStr);
         mario.setPosition(sWidth/7,400);
         goombaone.setPosition(1000,400);
         shroomOne.setPosition(500,400);
@@ -267,7 +272,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
                 c = getHolder().lockCanvas();
                 if(level == 1){
-                    c.drawColor(Color.CYAN);
+                    c.drawBitmap(bg1,0,0,null);
                 }
                 else if(level == 2){
                     c.drawColor(Color.BLACK);
@@ -282,9 +287,14 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 frameShift(mario, goombaone,shroomOne,tilesets);
                 scorestr = "Score: " + score;
                 livesStr = "Lives: " + lives;
-                c.drawText(scorestr, 9*blockside, 150, textPaint);
-                c.drawText(livesStr, 14*blockside, 150, textPaint);
-
+                if(level == 2 || level == 3){
+                    c.drawText(scorestr, 9*blockside, 150, textPaintLight);
+                    c.drawText(livesStr, 14*blockside, 150, textPaintLight);
+                }
+                else {
+                    c.drawText(scorestr, 9 * blockside, 150, textPaint);
+                    c.drawText(livesStr, 14 * blockside, 150, textPaint);
+                }
                 //this loop takes the level array and prints accordingly to mario's current position
                 for(int x = cameraleft; x<(24+cameraleft); x++){
                     for(int y = 0; y<12;y++){
