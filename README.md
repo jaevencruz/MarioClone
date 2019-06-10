@@ -14,17 +14,17 @@ Name your specifications here:
 * Should graders use an Android phone?  Should work with either Android or Emulator
 * Any other requirements?
 ## Controls
-* (Buttons)
-- Right = move right
-- Left = move left
-- Jump = jump
-- Leap Rt = leap right (move diagonal right)
-- Leap Lft = leap left (move diagonal left)
+* **(Buttons)**
+	- Right = move right
+	- Left = move left
+	- Jump = jump
+	- Leap Rt = leap right (move diagonal right)
+	- Leap Lft = leap left (move diagonal left)
 
-* (Touch)
-- Touching on the left of the center screen moves left
-- Touching on the right of the center screen moves right
-- Touching near the center-up of the screen jumps
+* **(Touch)**
+	- Touching on the left of the center screen moves left
+	- Touching on the right of the center screen moves right
+	- Touching near the center-up of the screen jumps
 
 ## Functionalities
 [//]: # (Write [x] to mark off what was accomplished.<br/>)
