@@ -13,7 +13,7 @@ Name your specifications here:
 * What emulator shoule graders use? Example) Pixel API 28
 * Should graders use an Android phone?  Should work with either Android or Emulator
 * Any other requirements?
-Controls:
+* Controls:
 (Buttons)
 Right = move right
 Left = move left
