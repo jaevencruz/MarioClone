@@ -19,7 +19,7 @@
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
@@ -78,10 +78,10 @@
         android:text="Leap Rt"
         app:layout_constraintBottom_toBottomOf="@+id/gameView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.799"
+        app:layout_constraintHorizontal_bias="0.966"
         app:layout_constraintStart_toStartOf="@+id/gameView"
         app:layout_constraintTop_toTopOf="@+id/gameView"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.066" />
 
     <Button
         android:id="@+id/btn_lft_up"
@@ -92,8 +92,8 @@
         android:text="Leap Lft"
         app:layout_constraintBottom_toBottomOf="@+id/gameView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.657"
+        app:layout_constraintHorizontal_bias="0.032"
         app:layout_constraintStart_toStartOf="@+id/gameView"
         app:layout_constraintTop_toTopOf="@+id/gameView"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.066" />
 </android.support.constraint.ConstraintLayout>

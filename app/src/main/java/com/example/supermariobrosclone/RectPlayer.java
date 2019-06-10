@@ -33,7 +33,7 @@ public class RectPlayer implements GameObject {
         this.playerRect = new Rect();
         this.bitmap = bitmap;
         this.context = context;
-        marioState = 1;
+        marioState = 0;
     }
 
     @Override

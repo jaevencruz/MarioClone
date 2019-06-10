@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         v.mario.moveRight();
                     }
                     v.mario.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.smallmarioright));
-                    v.mario.setLastMove(0);
+                    v.mario.setLastMove(1);
                 }
             }
         });
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         v.mario.moveLeft();
                     }
                     v.mario.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.smallmarioleft));
-                    v.mario.setLastMove(0);
+                    v.mario.setLastMove(3);
                 }
             }
         });
