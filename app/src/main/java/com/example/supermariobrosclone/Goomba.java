@@ -40,9 +40,14 @@ public class Goomba implements GameObject {
 
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawRect(gRect, paint);
-        if (bitmap != null) {
-            canvas.drawBitmap(this.bitmap,null,gRect,null);
+        if(isAlive) {
+            canvas.drawRect(gRect, paint);
+            if (bitmap != null) {
+                canvas.drawBitmap(this.bitmap, null, gRect, null);
+            }
+        }
+        else{
+            return;
         }
 
     }
@@ -96,25 +101,29 @@ public class Goomba implements GameObject {
 
     }
 
-    public void borderCollision(){
-        if(this.gRect.left < 0){
-            setMovePattern(true);
-        }
-        else if(this.gRect.right > sWidth){
-            setMovePattern(false);
-        }
-    }
 
     public void movement(){
-        if(movePattern){
-            moveRight();
+        if(isAlive) {
+            if (movePattern) {
+                moveRight();
+            } else {
+                moveLeft();
+            }
         }
         else{
-            moveLeft();
+            return;
         }
     }
 
     public void setMovePattern(boolean b){
         this.movePattern = b;
+    }
+
+    public void setAlive(boolean b){
+        this.isAlive = b;
+    }
+
+    public boolean isAlive(){
+        return this.isAlive;
     }
 }

@@ -12,36 +12,41 @@ public class Consumable implements GameObject {
     private int sWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     private int sHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
     private Context context;
-    private Rect cRect;
+    private Rect gRect;
     private Bitmap bitmap;
     private Paint paint;
     private int sizeRect = sHeight/14;
-    /*Goomba moves left when movePattern is false, Goomba moves right when movePattern is true;*/
+    /*Mushroom moves left when movePattern is false, Mushroom moves right when movePattern is true;*/
     private boolean movePattern;
     private int lastMove;
-    private boolean isActive;
+    private boolean isAlive;
 
     public Consumable(Context context) {
-        this.cRect = new Rect();
+        this.gRect = new Rect();
         this.paint = new Paint();
         this.context = context;
         this.movePattern = false;
-        this.isActive = false;
+        this.isAlive = true;
     }
     public Consumable(Bitmap bitmap, Context context) {
-        this.cRect = new Rect();
+        this.gRect = new Rect();
         this.paint = new Paint();
         this.bitmap = bitmap;
         this.context = context;
         this.movePattern = false;
-        this.isActive = false;
+        this.isAlive = true;
     }
 
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawRect(cRect, paint);
-        if (bitmap != null) {
-            canvas.drawBitmap(this.bitmap,null,cRect,null);
+        if(isAlive) {
+            canvas.drawRect(gRect, paint);
+            if (bitmap != null) {
+                canvas.drawBitmap(this.bitmap, null, gRect, null);
+            }
+        }
+        else{
+            return;
         }
 
     }
@@ -49,7 +54,7 @@ public class Consumable implements GameObject {
     public void update(Canvas canvas){}
 
     public Rect returnRect(){
-        return this.cRect;
+        return this.gRect;
     }
 
     public void resetGoomba(){
@@ -57,7 +62,7 @@ public class Consumable implements GameObject {
     }
 
     public void setPosition(int x, int y){
-        this.cRect.set(x-(sizeRect/2),y-(sizeRect/2),x+(sizeRect/2),y+(sizeRect/2));
+        this.gRect.set(x-(sizeRect/2),y-(sizeRect/2),x+(sizeRect/2),y+(sizeRect/2));
     }
 
     public void setBitmap(Bitmap bitmap){
@@ -65,7 +70,7 @@ public class Consumable implements GameObject {
     }
 
     public void setPosition(float x, float y){
-        this.cRect.set((int)x-(sizeRect/2),(int)y-(sizeRect/2),(int)x+(sizeRect/2),(int)y+(sizeRect/2));
+        this.gRect.set((int)x-(sizeRect/2),(int)y-(sizeRect/2),(int)x+(sizeRect/2),(int)y+(sizeRect/2));
     }
 
     public int returnLastMove(){
@@ -76,44 +81,48 @@ public class Consumable implements GameObject {
     }
 
     public void moveRight(){
-        this.cRect.offset(1,0);
-
+        this.gRect.offset(1,0);
+        this.lastMove = 1;
     }
 
     public void moveLeft(){
-        this.cRect.offset(-1,0);
-
+        this.gRect.offset(-1,0);
+        this.lastMove = 3;
     }
 
     public void moveUp(){
-        this.cRect.offset(0,-10);
+        this.gRect.offset(0,-10);
 
     }
 
     public void moveDown(){
-        this.cRect.offset(0,10);
+        this.gRect.offset(0,10);
 
     }
 
-    public void borderCollision(){
-        if(this.cRect.left < 0){
-            setMovePattern(true);
-        }
-        else if(this.cRect.right > sWidth){
-            setMovePattern(false);
-        }
-    }
 
     public void movement(){
-        if(movePattern){
-            moveRight();
+        if(isAlive) {
+            if (movePattern) {
+                moveRight();
+            } else {
+                moveLeft();
+            }
         }
         else{
-            moveLeft();
+            return;
         }
     }
 
     public void setMovePattern(boolean b){
         this.movePattern = b;
+    }
+
+    public void setAlive(boolean b){
+        this.isAlive = b;
+    }
+
+    public boolean isAlive(){
+        return this.isAlive;
     }
 }

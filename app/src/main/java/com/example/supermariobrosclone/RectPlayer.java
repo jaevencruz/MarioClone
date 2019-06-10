@@ -22,7 +22,7 @@ public class RectPlayer implements GameObject {
     private Bitmap bitmap;
     private int lastMove;
     private boolean isOnBlock = false;
-    private int marioState; //0 = small mario, 1 = big mario, 2 = small invincible mario, 3 = big invincible mario, 4 = dead mario
+    private int marioState; //0 = small mario, 1 = big mario, 2 = small invincible mario, 3 = big invincible mario, 4 = dead mario, 5 = degrade invicibility
 
     public RectPlayer(Context context) {
         this.playerRect = new Rect();

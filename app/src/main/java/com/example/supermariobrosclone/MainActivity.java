@@ -148,13 +148,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         if(v.gameOverState){
             v.gameOverState = false;
         }
-        if(me.getY() < v.sHeight/2){
+        if(me.getY() < v.sHeight/2 && me.getX() < ((v.sWidth/2)  + 100) && me.getX() > (v.sWidth/2)  - 100){
             if(v.playerControl) {
                 v.jmpUp(v.mario);
                 v.mario.setLastMove(0);
             }
         }
-        if(me.getX() > v.sWidth/2){
+        else if(me.getX() > v.sWidth/2){
             if(v.playerControl) {
                 v.mario.moveRight();
                 if(v.mario.returnMarioState() == 0 || v.mario.returnMarioState() == 2) {
