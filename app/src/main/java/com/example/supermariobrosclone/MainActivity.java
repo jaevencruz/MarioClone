@@ -56,7 +56,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public void onClick(View view) {
                     if(v.playerControl) {
                         v.mario.moveRight();
-                        v.mario.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.smallmarioright));
+                        if(v.mario.returnMarioState() == 0 || v.mario.returnMarioState() == 2) {
+                            v.mario.setBitmap(v.smallMario);
+                        } else if(v.mario.returnMarioState() == 1 || v.mario.returnMarioState() == 3){
+                            v.mario.setBitmap(v.bigMarioRight);
+                        }
                         v.mario.setLastMove(1);
                     }
             }
@@ -68,7 +72,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public void onClick(View view) {
                 if (v.playerControl) {
                     v.mario.moveLeft();
-                    v.mario.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.smallmarioleft));
+                    if(v.mario.returnMarioState() == 0 || v.mario.returnMarioState() == 2) {
+                        v.mario.setBitmap(v.smallMarioLeft);
+                    } else if(v.mario.returnMarioState() == 1 || v.mario.returnMarioState() == 3){
+                        v.mario.setBitmap(v.bigMarioLeft);
+                    }
                     v.mario.setLastMove(3);
                 }
             }
@@ -91,7 +99,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     for (int i = 0; i < 20; i++) {
                         v.mario.moveRight();
                     }
-                    v.mario.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.smallmarioright));
+                    if(v.mario.returnMarioState() == 0 || v.mario.returnMarioState() == 2) {
+                        v.mario.setBitmap(v.smallMario);
+                    } else if(v.mario.returnMarioState() == 1 || v.mario.returnMarioState() == 3){
+                        v.mario.setBitmap(v.bigMarioRight);
+                    }
                     v.mario.setLastMove(1);
                 }
             }
@@ -104,7 +116,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     for (int i = 0; i < 20; i++) {
                         v.mario.moveLeft();
                     }
-                    v.mario.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.smallmarioleft));
+                    if(v.mario.returnMarioState() == 0 || v.mario.returnMarioState() == 2) {
+                        v.mario.setBitmap(v.smallMarioLeft);
+                    } else if(v.mario.returnMarioState() == 1 || v.mario.returnMarioState() == 3){
+                        v.mario.setBitmap(v.bigMarioLeft);
+                    }
                     v.mario.setLastMove(3);
                 }
             }
@@ -128,9 +144,37 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     public boolean onTouch(View s, MotionEvent me){
-        this.v.mario.setPosition(me.getX(),me.getY());
+        //this.v.mario.setPosition(me.getX(),me.getY());
         if(v.gameOverState){
             v.gameOverState = false;
+        }
+        if(me.getY() < v.sHeight/2){
+            if(v.playerControl) {
+                v.jmpUp(v.mario);
+                v.mario.setLastMove(0);
+            }
+        }
+        if(me.getX() > v.sWidth/2){
+            if(v.playerControl) {
+                v.mario.moveRight();
+                if(v.mario.returnMarioState() == 0 || v.mario.returnMarioState() == 2) {
+                    v.mario.setBitmap(v.smallMario);
+                } else if(v.mario.returnMarioState() == 1 || v.mario.returnMarioState() == 3){
+                    v.mario.setBitmap(v.bigMarioRight);
+                }
+                v.mario.setLastMove(1);
+            }
+        }
+        else if(me.getX() < v.sWidth/2){
+            if (v.playerControl) {
+                v.mario.moveLeft();
+                if(v.mario.returnMarioState() == 0 || v.mario.returnMarioState() == 2) {
+                    v.mario.setBitmap(v.smallMarioLeft);
+                } else if(v.mario.returnMarioState() == 1 || v.mario.returnMarioState() == 3){
+                    v.mario.setBitmap(v.bigMarioLeft);
+                }
+                v.mario.setLastMove(3);
+            }
         }
         v.invalidate();
         return false;

@@ -110,6 +110,16 @@ public class RectPlayer implements GameObject {
         this.playerRect.set(x-(sizeRect/2),y-(sizeRect/2),x+(sizeRect/2),y+(sizeRect/2));
     }
 
+    public void makeBig(Bitmap b){
+        this.playerRect.set(this.playerRect.left, (this.playerRect.top + this.playerRect.height()), this.playerRect.right,this.playerRect.bottom );
+        this.bitmap = b;
+    }
+
+    public void makeSmall(Bitmap b){
+        this.playerRect.set(this.playerRect.left, (this.playerRect.top - this.playerRect.height()), this.playerRect.right,this.playerRect.bottom );
+        this.bitmap = b;
+    }
+
     public void setBitmap(Bitmap bitmap){
         this.bitmap = bitmap;
     }

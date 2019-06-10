@@ -78,12 +78,12 @@ public class Goomba implements GameObject {
 
     public void moveRight(){
         this.gRect.offset(1,0);
-
+        this.lastMove = 1;
     }
 
     public void moveLeft(){
         this.gRect.offset(-1,0);
-
+        this.lastMove = 3;
     }
 
     public void moveUp(){
