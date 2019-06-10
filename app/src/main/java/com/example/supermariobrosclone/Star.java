@@ -1,5 +1,9 @@
 package com.example.supermariobrosclone;
 
-public class Star extends Consumable {
+import android.content.Context;
 
+public class Star extends Consumable {
+    public Star(Context context){
+        super(context);
+    }
 }

@@ -27,11 +27,13 @@ public class RectPlayer implements GameObject {
     public RectPlayer(Context context) {
         this.playerRect = new Rect();
         this.context = context;
+        marioState = 0;
     }
     public RectPlayer(Bitmap bitmap, Context context) {
         this.playerRect = new Rect();
         this.bitmap = bitmap;
         this.context = context;
+        marioState = 1;
     }
 
     @Override
@@ -50,6 +52,10 @@ public class RectPlayer implements GameObject {
 
     public Rect returnRect(){
         return this.playerRect;
+    }
+
+    public int returnMarioState(){
+        return this.marioState;
     }
 
     public int returnX(){
@@ -86,6 +92,10 @@ public class RectPlayer implements GameObject {
 
     public boolean returnIsOnBlock(){
         return this.isOnBlock;
+    }
+
+    public void setMarioState(int i){
+        this.marioState = i;
     }
 
 

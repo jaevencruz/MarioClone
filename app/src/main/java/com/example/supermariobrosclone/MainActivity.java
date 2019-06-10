@@ -54,9 +54,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         findViewById(R.id.btn_move_right).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    v.mario.moveRight();
-                    v.mario.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.smallmarioright));
-                    v.mario.setLastMove(1);
+                    if(v.playerControl) {
+                        v.mario.moveRight();
+                        v.mario.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.smallmarioright));
+                        v.mario.setLastMove(1);
+                    }
             }
         });
 
@@ -64,27 +66,47 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         findViewById(R.id.btn_move_left).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (v.playerControl) {
                     v.mario.moveLeft();
-                    v.mario.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.smallmarioleft));
+                    v.mario.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.smallmarioleft));
                     v.mario.setLastMove(3);
+                }
             }
         });
 
         findViewById(R.id.btn_move_up).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               v.jmpUp(v.mario);
-               v.mario.setLastMove(0);
+                if(v.playerControl) {
+                    v.jmpUp(v.mario);
+                    v.mario.setLastMove(0);
+                }
             }
         });
         findViewById(R.id.btn_rt_up).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                v.jmpUp(v.mario);
-                for(int i = 0; i < 20; i++) {
-                    v.mario.moveRight();
+                if(v.playerControl) {
+                    v.jmpUp(v.mario);
+                    for (int i = 0; i < 20; i++) {
+                        v.mario.moveRight();
+                    }
+                    v.mario.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.smallmarioright));
+                    v.mario.setLastMove(0);
                 }
-                v.mario.setLastMove(0);
+            }
+        });
+        findViewById(R.id.btn_lft_up).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(v.playerControl) {
+                    v.jmpUp(v.mario);
+                    for (int i = 0; i < 20; i++) {
+                        v.mario.moveLeft();
+                    }
+                    v.mario.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.smallmarioleft));
+                    v.mario.setLastMove(0);
+                }
             }
         });
 
@@ -106,8 +128,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     public boolean onTouch(View s, MotionEvent me){
-        this.v.setX(me.getX());
-        this.v.setY(me.getY());
         this.v.mario.setPosition(me.getX(),me.getY());
         if(v.gameOverState){
             v.gameOverState = false;

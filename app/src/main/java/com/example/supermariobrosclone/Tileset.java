@@ -33,6 +33,7 @@ public class Tileset implements GameObject {
         this.paint = new Paint();
         this.draw = false;
         this.bitmap = b;
+        this.blockType =0;
     }
 
     @Override
@@ -56,6 +57,18 @@ public class Tileset implements GameObject {
         return this.rect;
     }
 
+    public int returnBlockType(){
+        return this.blockType;
+    }
+
+    public Bitmap returnBitmap(){
+        return this.bitmap;
+    }
+
+    public void setBitmap(Bitmap b){
+        this.bitmap = b;
+    }
+
     public void setCollideable(boolean b){
         this.collideable = b;
     }
@@ -72,5 +85,7 @@ public class Tileset implements GameObject {
 
     public void setType(int t){this.blockType = t;}
 
-    public int returnType(){return this.blockType;}
+    public int returnType(){
+        return this.blockType;
+    }
 }
