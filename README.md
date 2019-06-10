@@ -13,15 +13,15 @@ Name your specifications here:
 * What emulator shoule graders use? Example) Pixel API 28
 * Should graders use an Android phone?  Should work with either Android or Emulator
 * Any other requirements?
-- Controls:
-- (Buttons)
+## Controls
+* (Buttons)
 - Right = move right
 - Left = move left
 - Jump = jump
 - Leap Rt = leap right (move diagonal right)
 - Leap Lft = leap left (move diagonal left)
-- OR
-- (Touch)
+
+* (Touch)
 - Touching on the left of the center screen moves left
 - Touching on the right of the center screen moves right
 - Touching near the center-up of the screen jumps
