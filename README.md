@@ -49,9 +49,9 @@ The following **required** functionality is complete:
    - [X] Mario can move side to side
    - [X] Mario can jump
    - [X] When Mario jumps on top of a Goomba, he defeats the Goomba
-   - [ ] Mario gets hurt when he runs into a Goomba or a Piranha Plant (unless he is Invincible Mario)
+   - [X] Mario gets hurt when he runs into a Goomba or a Piranha Plant (unless he is Invincible Mario)
    - [X] Invincible Mario defeats all enemies in contact
-   - [ ] Super Mario has a larger form and if he gets hurt, he reverts to regular Mario
+   - [X] Super Mario has a larger form and if he gets hurt, he reverts to regular Mario
 
 [//]: # (* [ ] Got any features?)
 The following **additional** features are implemented:<br/>
