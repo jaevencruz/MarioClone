@@ -98,6 +98,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         this.y = y;
     }
 
+    /**Initial conditions**/
     private void init(Context context){
         for(int i = 0 ; i < goombas.length; i++){
             goombas[i] = new Goomba(decodeSampledBitmapFromResource(getResources(),R.drawable.goombaleft,100,100),this.getContext());
@@ -137,6 +138,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
         while (running){
             Canvas c = null;
+
             /*Player finishes all 3 levels*/
 
             if(winState){
@@ -238,6 +240,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                     bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level3));
 
                 }
+                levelReset();
                 resetGoomba(goombas,level);
                 consumableReset(shrooms,level);
                 playerControl = true;
@@ -305,6 +308,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 }
 
                 c = getHolder().lockCanvas();
+                /**Load different backgrounds**/
                 if(level == 1){
                     c.drawBitmap(bg1,0,0,null);
                 }
@@ -321,6 +325,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 frameShift(mario, goombas, shrooms, tilesets);
                 scorestr = "Score: " + score;
                 livesStr = "Lives: " + lives;
+                /**Print different color text for dark backgrounds**/
                 if(level == 2 || level == 3){
                     c.drawText(scorestr, 9*blockside, 150, textPaintLight);
                     c.drawText(livesStr, 14*blockside, 150, textPaintLight);
@@ -476,6 +481,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
                 }
                 else{
+                    /**Star effect on mario**/
                     if(cantkill || degradeInvicibility){
                         starCounter ++;
                         if(starCounter > 2000  || (mario.returnMarioState() == 5 && starCounter > 500)){
@@ -528,6 +534,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                             oscillator = true;
                         }
                     }
+                    /**Draw and move each enemy and mario**/
                     for(int i = 0; i<shrooms.length;i++) {
                         shrooms[i].movement();
                         shrooms[i].draw(c);
@@ -878,6 +885,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     }
     /**End Consumables Behaviour**/
 
+    /**Move the screen**/
     public void frameShift(RectPlayer m,Goomba [] g,Consumable []c,Tileset[][] tilesets){
         if(m.returnRect().centerX() > 2*sWidth/3){
             if(cameraleft +24 < 100) {
@@ -910,6 +918,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         return pir;
     }
 
+    /**Map loading methods**/
     public void levelReset() {
         for (int i = 0; i < 100; i++) {
             for (int j = 0; j < 12; j++) {
@@ -1088,6 +1097,9 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeResource(res, resId, options);
     }
+    /**End Map Methods**/
+
+
     public void jmpUp(RectPlayer m){
         m.setLastMove(0);
         for(int k = 0 ; k < 32; k++) {
@@ -1117,6 +1129,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
         }
     }
+
     private static void setTextSizeForWidth(Paint paint, float desiredWidth,
                                             String text) {
         final float testTextSize = 48f;
