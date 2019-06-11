@@ -318,7 +318,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                     c.drawColor(Color.CYAN);
                 }
                 //Shift frames when Mario moves across the world
-                frameShift(mario, goombas, shroomOne, tilesets);
+                frameShift(mario, goombas, shrooms, tilesets);
                 scorestr = "Score: " + score;
                 livesStr = "Lives: " + lives;
                 if(level == 2 || level == 3){
@@ -835,7 +835,11 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 m.setBitmap(bigMarioLeft);
             }
             else{
+                m.setMarioState(1);
                 m.setBitmap(bigMarioRight);
+                cantkill = false;
+                starCounter = 0;
+                degradeInvicibility = false;
             }
         }
     }
@@ -850,36 +854,38 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
             g[i].setAlive(true);
         }
         if(level == 1){
-            g[0].setPosition(5000,400);
-            g[1].setPosition(7050,400);
+            g[0].setPosition(4530,400);
+            g[1].setPosition(500,400);
 
         }
         else if(level == 2){
-            g[0].setPosition(5000,400);
-            g[1].setPosition(7050,400);
+            g[0].setPosition(4000,400);
+            g[1].setPosition(850,400);
 
         }
         else if(level == 3){
-            g[0].setPosition(5000,400);
-            g[1].setPosition(7050,400);
+            g[0].setPosition(4000,400);
+            g[1].setPosition(700,400);
 
         }
         else{
             g[0].setPosition(5000,400);
-            g[1].setPosition(7050,400);
+            g[1].setPosition(6000,400);
 
         }
     }
     /**End Consumables Behaviour**/
 
-    public void frameShift(RectPlayer m,Goomba [] g,Consumable c,Tileset[][] tilesets){
+    public void frameShift(RectPlayer m,Goomba [] g,Consumable []c,Tileset[][] tilesets){
         if(m.returnRect().centerX() > 2*sWidth/3){
             if(cameraleft +24 < 100) {
                 m.returnRect().offset(-(sHeight/14),0);
                 for(int i = 0 ; i<g.length;i++) {
                     g[i].returnRect().offset(-(sHeight / 14), 0);
                 }
-                c.returnRect().offset(-(sHeight/14),0);
+                for(int i = 0 ; i<c.length;i++) {
+                    c[i].returnRect().offset(-(sHeight / 14), 0);
+                }
                 for(int i = 0; i < 100; i++ ) {
                     for(int j = 0; j < 12; j++ ) {
                         tilesets[i][j].returnRect().offset(-(sHeight/14), 0);
