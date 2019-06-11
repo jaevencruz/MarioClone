@@ -824,11 +824,13 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
             score = score + 1000;
             if(m.returnMarioState() == 0) {
                 m.setMarioState(1);
+                starCounter = 0;
             }
             else if(m.returnMarioState() == 2){
                 m.setMarioState(3);
             }
             if(m.returnLastMove() == 1) {
+                starCounter = 0;
                 m.setBitmap(bigMarioRight);
             }
             else if(m.returnMarioState() == 3){
