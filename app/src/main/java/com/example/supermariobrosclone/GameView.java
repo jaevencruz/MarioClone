@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -14,7 +15,6 @@ import android.view.SurfaceView;
 import java.util.Random;
 
 public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Callback {
-
     static int sWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     static int sHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
@@ -57,12 +57,15 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     float x,y;
     Paint paint = new Paint();
     Goomba goombaone = new Goomba(decodeSampledBitmapFromResource(getResources(),R.drawable.goombaleft,100,100),this.getContext());
+    Goomba [] goombas = new Goomba[8];
     Consumable shroomOne = new Consumable(mushroom,this.getContext());
+    Consumable[] shrooms = new Consumable[2];
     //Goomba goombaone = new Goomba(this.getContext());
     RectPlayer mario = new RectPlayer(smallMario, this.getContext());
     Bitmap levelarray[][] = new Bitmap[100][12];
     Tileset tilesets[][] = new Tileset[100][12];
     Tileset resetLevelArray[][] = new Tileset[100][12];
+
     static int level = 1;
     int temptype[][] = new int[100][12];
     private String scorestr;
@@ -96,6 +99,12 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     }
 
     private void init(Context context){
+        for(int i = 0 ; i < goombas.length; i++){
+            goombas[i] = new Goomba(decodeSampledBitmapFromResource(getResources(),R.drawable.goombaleft,100,100),this.getContext());
+        }
+        for(int i = 0 ; i < shrooms.length; i++){
+            shrooms[i] = new Consumable(mushroom,this.getContext());
+        }
         textPaintLight.setColor(Color.WHITE);
         scorestr = "Score: " + score;
         livesStr = "Lives: " + lives;
@@ -105,9 +114,8 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         setTextSizeForWidth(textPaintLight,200,scorestr);
         setTextSizeForWidth(textPaintLight,200,livesStr);
         mario.setPosition(sWidth/7,400);
-        goombaone.setPosition(2500,400);
-        shroomOne.setPosition(500,400);
-
+        resetGoomba(goombas,level);
+        consumableReset(shrooms,level);
         System.out.println("Loading level 1");
         bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level1));
         System.out.println("Level 1 printed");
@@ -126,6 +134,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     }
 
     public void run(){
+
         while (running){
             Canvas c = null;
             /*Player finishes all 3 levels*/
@@ -154,6 +163,8 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                     c.drawBitmap(gameOverScreen, sWidth/2 - 400, sHeight/2 - 400,null);
                     getHolder().unlockCanvasAndPost(c);
                 }
+                resetGoomba(goombas,level);
+                consumableReset(shrooms,level);
                 mario.setMarioState(0);
                 mario.setBitmap(smallMario);
                 c = getHolder().lockCanvas();
@@ -161,6 +172,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 c.drawBitmap(load, sWidth/2 - 400, sHeight/2 - 400,null);
                 getHolder().unlockCanvasAndPost(c);
                 bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level1));
+                levelReset();
                 mario.setPosition(sWidth/7,300);
                 playerControl = true;
                 continue;
@@ -180,6 +192,8 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                     c.drawBitmap(gameOverScreen, sWidth/2 - 400, sHeight/2 - 400,null);
                     getHolder().unlockCanvasAndPost(c);
                 }
+                resetGoomba(goombas,level);
+                consumableReset(shrooms,level);
                 c = getHolder().lockCanvas();
                 c.drawColor(Color.BLACK);
                 c.drawBitmap(load, sWidth/2 - 400, sHeight/2 - 400,null);
@@ -187,6 +201,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 mario.setPosition(sWidth/7,300);
                 gameOverState = false;
                 bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level1));
+
                 mario.setMarioState(0);
                 mario.setBitmap(smallMario);
                 playerControl = true;
@@ -194,9 +209,16 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
             }
             /*Level transition*/
             else if(loadLvl){
+                starCounter = 0;
                 mapCloned = false;
                 loadLvl = false;
-
+                cantkill = false;
+                if(mario.returnMarioState() == 3){
+                    mario.setMarioState(1);
+                }
+                if(mario.returnMarioState() == 2){
+                    mario.setMarioState(0);
+                }
                 cameraleft = 0;
                 c = getHolder().lockCanvas();
                 c.drawColor(Color.BLACK);
@@ -208,12 +230,16 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 }
                 else if(level == 2) {
                     bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level2));
+
                 }
                 else if(level == 3){
                     System.out.println("Loading lvl3 \n");
                     mario.setPosition(200,300);
                     bmap(BitmapFactory.decodeResource(getResources(), R.drawable.level3));
+
                 }
+                resetGoomba(goombas,level);
+                consumableReset(shrooms,level);
                 playerControl = true;
                 continue;
             }
@@ -251,13 +277,14 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                     invalidate();
                     getHolder().unlockCanvasAndPost(c);
                 }
+                resetGoomba(goombas,level);
+                consumableReset(shrooms,level);
                 deathJumpCounter = 60;
                 lives-=1;
                 cameraleft = 0;
                 marioDeath = false;
                 mario.setBitmap(smallMario);
                 mario.setPosition(sWidth/7,400);
-                resetGoomba(goombaone);
                 consumableReset(shroomOne);
                 for(int i = 0; i < 100 ; i++) {
                     c = getHolder().lockCanvas();
@@ -290,8 +317,8 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 else{
                     c.drawColor(Color.CYAN);
                 }
-
-                frameShift(mario, goombaone,shroomOne,tilesets);
+                //Shift frames when Mario moves across the world
+                frameShift(mario, goombas, shroomOne, tilesets);
                 scorestr = "Score: " + score;
                 livesStr = "Lives: " + lives;
                 if(level == 2 || level == 3){
@@ -314,26 +341,33 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                         {
                             tilesets[x][y].draw(c);
                         }
-                        goombaMarioCollision(mario,goombaone);
-                        consumableMarioCollision(mario,shroomOne);
+                        for(int i = 0; i < goombas.length; i++) {
+                            goombaMarioCollision(mario, goombas[i]);
+                            if(Rect.intersects(goombas[i].returnRect(),tilesets[x][y].returnRect())) {
+                                goombaCollision(goombas[i], tilesets[x][y]);
+                                goombaGravity(goombas[i], tilesets[x][y]);
+                            }
+                        }
+
                         if(marioDeath){
                             break;
                         }
-                        if(Rect.intersects(shroomOne.returnRect(),tilesets[x][y].returnRect())) {
-                            consumableCollision(shroomOne, tilesets[x][y]);
-                            consumableGravity(shroomOne, tilesets[x][y]);
+                        for(int i = 0; i < shrooms.length; i++) {
+                            consumableMarioCollision(mario, shrooms[i]);
+                            if (Rect.intersects(shrooms[i].returnRect(), tilesets[x][y].returnRect())) {
+                                consumableCollision(shrooms[i], tilesets[x][y]);
+                                consumableGravity(shrooms[i], tilesets[x][y]);
+                            }
                         }
-                        if(Rect.intersects(goombaone.returnRect(),tilesets[x][y].returnRect())) {
-                            goombaCollision(goombaone, tilesets[x][y]);
-                            goombaGravity(goombaone, tilesets[x][y]);
-                        }
+
                         //Check mario collision with some enemies and consumables
                         if(Rect.intersects(mario.returnRect(),tilesets[x][y].returnRect())) {
                             //Invincibility check
-                            if(cantkill)
+                            if(cantkill  || mario.returnMarioState() == 2 || mario.returnMarioState() == 3)
                             {
+
                                 //Touch piranha plant when invincible
-                                if(tilesets[x][y].blockType==5)
+                                if(tilesets[x][y].blockType==5  && mario.returnMarioState() != 5)
                                 {
                                     score = score + 1000;
                                     tilesets[x][y+1].blockType = 0;
@@ -358,8 +392,11 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                                 score+=1000;
                                 cantkill = true;
                                 starCounter = 0;
-                                if(mario.returnMarioState() == 0){
+                                if(mario.returnMarioState() == 0 || mario.returnMarioState() == 5){
                                     mario.setMarioState(2);
+                                    if(mario.returnMarioState() == 5){
+                                        starCounter = 0;
+                                    }
                                 }
                                 else if(mario.returnMarioState() == 1){
                                     mario.setMarioState(3);
@@ -408,7 +445,9 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                             //Piranha plant touch
                             else if(tilesets[x][y].returnType()==5  && (mario.returnRect().centerX() > tilesets[x][y].returnRect().left || mario.returnRect().centerX() < tilesets[x][y].returnRect().right))
                             {
+
                                 if(mario.returnMarioState() == 0) {
+                                    mario.setMarioState(4);
                                     System.out.println("You Died \n");
                                     marioDeath = true;
                                     playerControl = false;
@@ -437,10 +476,10 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
                 }
                 else{
-                    if(cantkill){
+                    if(cantkill || degradeInvicibility){
                         starCounter ++;
                         if(starCounter > 2000  || (mario.returnMarioState() == 5 && starCounter > 500)){
-                            if(mario.returnMarioState() == 5){
+                            if(mario.returnMarioState() == 5 || degradeInvicibility){
                                 degradeInvicibility = false;
                                 mario.setMarioState(0);
                                 mario.setBitmap(smallMario);
@@ -489,11 +528,16 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                             oscillator = true;
                         }
                     }
-                    shroomOne.movement();
-                    goombaone.movement();
-                    goombaone.draw(c);
+                    for(int i = 0; i<shrooms.length;i++) {
+                        shrooms[i].movement();
+                        shrooms[i].draw(c);
+                    }
+                    for(int i = 0; i<goombas.length;i++) {
+                        goombas[i].movement();
+                        goombas[i].draw(c);
+                    }
                     mario.draw(c);
-                    shroomOne.draw(c);
+
                     invalidate();
                 }
                 getHolder().unlockCanvasAndPost(c);
@@ -518,6 +562,62 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     }
 
     /**Mario behaviours**/
+    private void marioCollideRect(RectPlayer m, Tileset r, Goomba[] g){
+        //Mario runs into a block from the right
+
+        if(Rect.intersects(m.returnRect(),r.returnRect()) && r.isCollideable()){
+            if( m.returnLastMove() == 1 && m.returnRect().bottom - 2 > r.returnRect().top && m.returnRect().centerX() < r.returnRect().left && (r.returnBlockType() == 1 || r.returnBlockType() == 0)){
+                while(Rect.intersects(m.returnRect(),r.returnRect()) && m.returnRect().right > r.returnRect().left) {
+                    m.returnRect().offset(-1,0);
+                }
+
+
+            }
+            //Mario runs into a block from the left
+            else if( m.returnLastMove() == 3 && m.returnRect().bottom - 2 > r.returnRect().top && m.returnRect().centerX() > r.returnRect().right && (r.returnBlockType() == 1 || r.returnBlockType() == 0)){
+                while(Rect.intersects(m.returnRect(),r.returnRect()) && m.returnRect().left < r.returnRect().right) {
+                    m.returnRect().offset(1,0);
+                }
+
+            }
+            /**Collide with breakable block**/
+            else if(m.returnLastMove() == 0  && m.returnRect().top > r.returnRect().top){
+                if(r.returnBlockType() == 1){
+                    if(mario.returnMarioState() == 1 || mario.returnMarioState() == 3){
+                        //Kill goomba on top of block
+                        for(int i = 0; i< g.length; i++){
+                            if(g[i].returnRect().bottom + 1 > r.returnRect().top && Rect.intersects(g[i].returnRect(),r.returnRect())){
+                                g[i].setAlive(false);
+                                score = score + 200;
+                            }
+                        }
+                        r.setDraw(false);
+                        r.setCollideable(false);
+                        score = score + 20;
+                    }
+                    else{
+                        for(int i = 0; i< g.length; i++){
+                            if((g[i].returnRect().bottom + 1 > r.returnRect().top)&& Rect.intersects(g[i].returnRect(),r.returnRect())){
+                                g[i].setAlive(false);
+                                score = score + 200;
+                            }
+                        }
+                        return;
+                    }
+                }
+                else if (r.returnBlockType() == 3){
+                    r.setBitmap(usedQuestion);
+                    r.setType(8);
+                    m.returnRect().offset(0,1);
+                }
+
+            }
+            else{
+                return;
+            }
+        }
+    }
+
     private void marioCollideRect(RectPlayer m, Tileset r){
         //Mario runs into a block from the right
 
@@ -540,11 +640,13 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
             else if(m.returnLastMove() == 0  && m.returnRect().top > r.returnRect().top){
                 if(r.returnBlockType() == 1){
                     if(mario.returnMarioState() == 1 || mario.returnMarioState() == 3){
+
                         r.setDraw(false);
                         r.setCollideable(false);
                         score = score + 20;
                     }
                     else{
+
                         return;
                     }
                 }
@@ -639,6 +741,52 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         g.setPosition(500,400);
     }
 
+    public void resetGoomba(Goomba [] g, int level){
+        for(int i = 0; i<g.length; i++) {
+            g[i].setAlive(true);
+        }
+        if(level == 1){
+            g[0].setPosition(3500,400);
+            g[1].setPosition(4000,400);
+            g[2].setPosition(5000,400);
+            g[3].setPosition(5500,400);
+            g[4].setPosition(5750,400);
+            g[5].setPosition(6000,400);
+            g[6].setPosition(6750,400);
+            g[7].setPosition(7000,400);
+        }
+        else if(level == 2){
+            g[0].setPosition(3500,400);
+            g[1].setPosition(4000,400);
+            g[2].setPosition(5000,400);
+            g[3].setPosition(5500,400);
+            g[4].setPosition(5750,400);
+            g[5].setPosition(6000,400);
+            g[6].setPosition(6750,400);
+            g[7].setPosition(7000,400);
+        }
+        else if(level == 3){
+            g[0].setPosition(3500,400);
+            g[1].setPosition(4000,400);
+            g[2].setPosition(5000,400);
+            g[3].setPosition(5500,400);
+            g[4].setPosition(5750,400);
+            g[5].setPosition(6000,400);
+            g[6].setPosition(6750,400);
+            g[7].setPosition(7000,400);
+        }
+        else{
+            g[0].setPosition(3500,400);
+            g[1].setPosition(4000,400);
+            g[2].setPosition(5000,400);
+            g[3].setPosition(5500,400);
+            g[4].setPosition(5750,400);
+            g[5].setPosition(6000,400);
+            g[6].setPosition(6750,400);
+            g[7].setPosition(7000,400);
+        }
+    }
+
     /**End enemy behaviours**/
 
     /**Consumables Behaviour**/
@@ -674,7 +822,12 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         if (Rect.intersects(c.returnRect(), m.returnRect()) && c.isAlive()){
             c.setAlive(false);
             score = score + 1000;
-            m.setMarioState(1);
+            if(m.returnMarioState() == 0) {
+                m.setMarioState(1);
+            }
+            else if(m.returnMarioState() == 2){
+                m.setMarioState(3);
+            }
             if(m.returnLastMove() == 1) {
                 m.setBitmap(bigMarioRight);
             }
@@ -691,13 +844,41 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         c.setAlive(true);
         c.setPosition(800,400);
     }
+
+    public void consumableReset(Consumable [] g, int level){
+        for(int i = 0; i<g.length; i++) {
+            g[i].setAlive(true);
+        }
+        if(level == 1){
+            g[0].setPosition(5000,400);
+            g[1].setPosition(7050,400);
+
+        }
+        else if(level == 2){
+            g[0].setPosition(5000,400);
+            g[1].setPosition(7050,400);
+
+        }
+        else if(level == 3){
+            g[0].setPosition(5000,400);
+            g[1].setPosition(7050,400);
+
+        }
+        else{
+            g[0].setPosition(5000,400);
+            g[1].setPosition(7050,400);
+
+        }
+    }
     /**End Consumables Behaviour**/
 
-    public void frameShift(RectPlayer m,Goomba g,Consumable c,Tileset[][] tilesets){
+    public void frameShift(RectPlayer m,Goomba [] g,Consumable c,Tileset[][] tilesets){
         if(m.returnRect().centerX() > 2*sWidth/3){
             if(cameraleft +24 < 100) {
                 m.returnRect().offset(-(sHeight/14),0);
-                g.returnRect().offset(-(sHeight/14),0);
+                for(int i = 0 ; i<g.length;i++) {
+                    g[i].returnRect().offset(-(sHeight / 14), 0);
+                }
                 c.returnRect().offset(-(sHeight/14),0);
                 for(int i = 0; i < 100; i++ ) {
                     for(int j = 0; j < 12; j++ ) {
@@ -724,19 +905,6 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     public void levelReset() {
         for (int i = 0; i < 100; i++) {
             for (int j = 0; j < 12; j++) {
-                /*try{
-                    tilesets[i][j].setType(resetLevelArray[i][j].returnType());
-                }catch (Exception e){}
-                try{
-                    tilesets[i][j].setBitmap(resetLevelArray[i][j].returnBitmap());
-                }catch (Exception e){}
-                tilesets[i][j].returnRect().set(i*(sHeight/14),j*(sHeight/14), (i*sHeight/14) + sHeight/14,(j*sHeight/14) + sHeight/14);
-                try {
-                    tilesets[i][j].setDraw(resetLevelArray[i][j].isDraw());
-                }catch (Exception e){}
-                try {
-                    tilesets[i][j].setCollideable(resetLevelArray[i][j].isCollideable());
-                }catch (Exception e){}*/
                 tilesets[i][j].setType(resetLevelArray[i][j].returnType());
                 tilesets[i][j].setBitmap(resetLevelArray[i][j].returnBitmap());
                 tilesets[i][j].returnRect().set(i*(sHeight/14),j*(sHeight/14), (i*sHeight/14) + sHeight/14,(j*sHeight/14) + sHeight/14);
@@ -746,6 +914,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
         }
     }
+
 
     public void bmap(Bitmap b){
         int color, red, green, blue, blockside;

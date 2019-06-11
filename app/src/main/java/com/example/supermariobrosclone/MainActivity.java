@@ -1,12 +1,5 @@
 package com.example.supermariobrosclone;
 
-import android.app.Activity;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.PixelFormat;
-import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,12 +9,11 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import java.io.File;
-
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
 
     SurfaceHolder transparentV;
     GameView v;
+
 
     float x,y;
     boolean button = false;
@@ -33,9 +25,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
+
         //v = new GameView(this.getBaseContext());
         v = findViewById(R.id.gameView);
         v.setOnTouchListener(this);
+
 
 
         //v.setZOrderOnTop(true);
@@ -55,6 +49,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             @Override
             public void onClick(View view) {
                     if(v.playerControl) {
+                        if(v.mario.returnMarioState() == 4){
+                            return;
+                        }
+                        v.mario.moveRight();
                         v.mario.moveRight();
                         v.mario.moveRight();
                         if(v.mario.returnMarioState() == 0 || v.mario.returnMarioState() == 2) {
@@ -72,6 +70,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             @Override
             public void onClick(View view) {
                 if (v.playerControl) {
+                    if(v.mario.returnMarioState() == 4){
+                        return;
+                    }
+                    v.mario.moveLeft();
                     v.mario.moveLeft();
                     v.mario.moveLeft();
                     if(v.mario.returnMarioState() == 0 || v.mario.returnMarioState() == 2) {
@@ -88,6 +90,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             @Override
             public void onClick(View view) {
                 if(v.playerControl) {
+                    if(v.mario.returnMarioState() == 4){
+                        return;
+                    }
                     v.jmpUp(v.mario);
                     v.mario.setLastMove(0);
                 }
@@ -97,6 +102,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             @Override
             public void onClick(View view) {
                 if(v.playerControl) {
+                    if(v.mario.returnMarioState() == 4){
+                        return;
+                    }
                     v.jmpUp(v.mario);
                     for (int i = 0; i < 20; i++) {
                         v.mario.moveRight();
@@ -114,6 +122,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             @Override
             public void onClick(View view) {
                 if(v.playerControl) {
+                    if(v.mario.returnMarioState() == 4){
+                        return;
+                    }
                     v.jmpUp(v.mario);
                     for (int i = 0; i < 20; i++) {
                         v.mario.moveLeft();
@@ -152,12 +163,19 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
         if(me.getY() < v.sHeight/2 && me.getX() < ((v.sWidth/2)  + 100) && me.getX() > (v.sWidth/2)  - 100){
             if(v.playerControl) {
+                if(v.mario.returnMarioState() == 4){
+                    return false;
+                }
                 v.jmpUp(v.mario);
                 v.mario.setLastMove(0);
             }
         }
         else if(me.getX() > v.sWidth/2){
             if(v.playerControl) {
+                if(v.mario.returnMarioState() == 4){
+                    return false;
+                }
+                v.mario.moveRight();
                 v.mario.moveRight();
                 v.mario.moveRight();
                 if(v.mario.returnMarioState() == 0 || v.mario.returnMarioState() == 2) {
@@ -170,6 +188,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
         else if(me.getX() < v.sWidth/2){
             if (v.playerControl) {
+                if(v.mario.returnMarioState() == 4){
+                     return false;
+                }
+                v.mario.moveLeft();
                 v.mario.moveLeft();
                 v.mario.moveLeft();
                 if(v.mario.returnMarioState() == 0 || v.mario.returnMarioState() == 2) {
